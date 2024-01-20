@@ -1,7 +1,10 @@
 from flask import Blueprint, request, current_app, render_template, jsonify
 from create_form_fields import NoteForm
+import pymongo
 
 import datetime
+
+from management_helpers.format_json_for_frontend import format_results
 
 home_bp = Blueprint('home', __name__)
 
@@ -20,32 +23,17 @@ def home():
             entry["date"],
             datetime.datetime.strptime(entry["date"], "%Y-%m-%d").strftime("%b %d")
         )
-        for entry in current_app.db.entries.find({})
+        for entry in current_app.db.entries.find({}).sort("date", pymongo.DESCENDING)
     ]
 
-    entries_with_date = sorted(
-        entries_with_date,
-        key=lambda x: datetime.datetime.strptime(x[1], "%Y-%m-%d"),
-        reverse=True
-    )
     return render_template("home.html", entries=entries_with_date, form=form)
 
 
-home_bp.route("/load-notes", methods=['GET')
+@home_bp.route("/load-default-notes", methods=['GET',])
 def load_notes():
-    entries_with_date = [
-        (
-            entry["content"],
-            entry["date"],
-            datetime.datetime.strptime(entry["date"], "%Y-%m-%d").strftime("%b %d")
-        )
-        for entry in current_app.db.entries.find({})
-    ]
+    entries = current_app.db.entries.find({}).sort("date", pymongo.DESCENDING)
 
-    entries_with_date = sorted(
-        entries_with_date,
-        key=lambda x: datetime.datetime.strptime(x[1], "%Y-%m-%d"),
-        reverse=True
-    )
+    # Create formatted results
+    formatted_results = format_results(entries)
 
-    return jsonify(entries_with_date)
+    return jsonify(formatted_results)
