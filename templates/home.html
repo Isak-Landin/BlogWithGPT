@@ -5,6 +5,7 @@
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
     <title>Microblog</title>
 
+    <script src="{{url_for('static', filename='/js/search_entries.js')}}"></script>
     <link rel="stylesheet" href="/static/css/styles.css" />
 </head>
 <body>
@@ -22,31 +23,41 @@
         <section>
             <h1>Add new entry</h1>
             <form class="form" method="POST">
+                {{ form.hidden_tag() }}
                 <p class="form__input">
-                    <label for="entry" class="form__label">Entry contents:</label>
-                    <textarea name="content" id="entry" class="form__textarea"></textarea>
+                    {{ form.content.label(class="form__label") }}
+                    {{ form.content(class="form__textarea") }}
+                    <!-- <label for="entry" class="form__label">Entry contents:</label>
+                    <textarea name="content" id="entry" class="form__textarea"></textarea> -->
                 </p>
                 <button type="submit" class="form__submit">Add entry</button>
             </form>
         </section>
         <section>
             <h1>Recent Posts</h1>
-            {% for entry in entries %}
-                <article class="entry">
-                    <div class="entry__header">
-                        <h2 class="entry__title">{{ entry[0] | truncate(30, true) }}</h2>
-                        <time class="entry__date" datetime="{{ entry[1] }}">· {{ entry[2] }}</time>
-                    </div>
-                    <p class="entry__content">
-                        {{ entry[0] }}
-                    </p>
-                    
-                    <div class="entry__footer">
-                        <a href="#" class="entry__footer-edit">✎</a>
-                        <a href="#" class="entry__footer-remove">✕</a>
-                    </div>
-                </article>
-            {% endfor %}
+            <search>
+                <form action="./search/">
+                    <input type="search" id="search_field" name="q" placeholder="Search..."/>
+                </form>
+            </search>
+            <div id="searchResults">
+                {% for entry in entries %}
+                    <article class="entry">
+                        <div class="entry__header">
+                            <h2 class="entry__title">{{ entry[0] | truncate(30, true) }}</h2>
+                            <time class="entry__date" datetime="{{ entry[1] }}">· {{ entry[2] }}</time>
+                        </div>
+                        <p class="entry__content">
+                            {{ entry[0] }}
+                        </p>
+
+                        <div class="entry__footer">
+                            <a href="#" class="entry__footer-edit">✎</a>
+                            <a href="#" class="entry__footer-remove">✕</a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
         </section>
     </main>
     <footer class="footer">
