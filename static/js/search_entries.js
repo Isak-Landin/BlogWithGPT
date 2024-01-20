@@ -15,13 +15,18 @@ document.addEventListener(
 function search(event) {
     var searchTerm = document.getElementById('search_field').value;
     if (searchTerm.length === 0) {
-        console.log('No search term entered');
+        renderDefaultNotes();
         return;
     }
     var url = '/search/' + searchTerm;
     fetch(url)
       .then(response => response.json())
         .then(data => {
+            if (data.length === 0) {
+                console.log('No entries');
+                renderNoResultsPlaceholder(document.getElementById('search_field').value);
+                return;
+            }
             renderEntries(data)
         })
         .catch(error => {
@@ -30,16 +35,47 @@ function search(event) {
 
 }
 
+function renderDefaultNotes(){
+    var url = '/load-default-notes'
+    fetch(url)
+        .then(response => response.json())
+            .then(data => {
+                renderEntries(data)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+}
+
+function renderNoResultsPlaceholder(searchTerm) {
+    const container = document.getElementById('searchResults'); // The container where entries are displayed
+    container.innerHTML = ''; // Clear existing entries
+
+    const article = document.createElement('article');
+    article.className = 'noResults';
+
+    const title = document.createElement('h2');
+    title.className = 'noResults__title';
+    title.textContent = searchTerm.length <= 20 ? 'No results for the search term: ' + '' + searchTerm : searchTerm.substring(0, 20) + '...';
+
+    const content = document.createElement('p');
+    content.className = 'noResults__content';
+
+    const link = document.createElement('a');
+    link.className = 'noResults__supportLink';
+
+    article.appendChild(title);
+    article.appendChild(content);
+    article.appendChild(link);
+
+    container.appendChild(article);
+}
+
 function renderError(error) {
     const container = document.getElementById('searchResults'); // The container where entries are displayed
 }
 
 function renderEntries(entries) {
-    if (entries.length === 0) {
-        renderNoResultsPlaceholder();
-        return;
-    }
-
     const container = document.getElementById('searchResults'); // The container where entries are displayed
     container.innerHTML = ''; // Clear existing entries
 
@@ -87,5 +123,5 @@ function renderEntries(entries) {
         article.appendChild(footer);
 
         container.appendChild(article);
-    }, 250);
+    });
 }
