@@ -1,4 +1,5 @@
 import datetime
+from bson.objectid import ObjectId
 
 
 def format_results(entries):
@@ -15,7 +16,7 @@ def format_results(entries):
     """
     formatted_results = [
         {
-            'mongo_id': entry["_id"],
+            'mongo_id': str(entry["_id"]),
             'title': entry["content"][:30] + '...' if len(entry["content"]) > 30 else entry["content"],
             'date': entry["date"],
             'content': entry["content"],
