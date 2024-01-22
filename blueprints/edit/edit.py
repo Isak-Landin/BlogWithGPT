@@ -37,6 +37,14 @@ def edit(mongo_id):
     return abort(Response('Something went wrong! Entry: ' + str(entry) if entry else 'Some unknown error, contact '
                                                                                      'support', 404))
 
+@edit_bp.route("/delete/<mongo_id>", methods=['DELETE'])
+def delete(mongo_id):
+    pass
+
+@edit_bp.route('/save/<mongo_id>', methods=['PUT'])
+def save(mongo_id):
+    pass
+
 
 def is_valid_object_id(id):
     try:
