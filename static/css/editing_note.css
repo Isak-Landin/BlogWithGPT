@@ -9,4 +9,65 @@
     margin: 10px 0;    /* Adds some margin around the textarea */
     resize: vertical;  /* Allows the user to resize the textarea vertically */
     overflow: auto;    /* Adds a scrollbar if the text overflows */
+    font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+}
+
+/* CSS */
+#entry__footer-save-button{
+    background-color: #2ea44f;
+    color: #fff;
+    border: 1px solid rgba(27, 31, 35, .15);
+    box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+}
+
+.entry__footer-button {
+  appearance: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 6px 16px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.entry__footer-button:focus:not(:focus-visible):not(.focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
+
+#entry__footer-save-button:hover {
+  background-color: #2c974b;
+}
+
+#entry__footer-cancel-button:hover {
+  background-color: #2c974b;
+}
+
+#entry__footer-save-button:focus {
+  box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+  outline: none;
+}
+
+#entry__footer-cancel-button:focus {
+  box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
+  outline: none;
+}
+
+#entry__footer-save-button:disabled {
+  background-color: #94d3a2;
+  border-color: rgba(27, 31, 35, .1);
+  color: rgba(255, 255, 255, .8);
+  cursor: default;
+}
+
+#entry__footer-save-button:active {
+  background-color: #298e46;
+  box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
 }
