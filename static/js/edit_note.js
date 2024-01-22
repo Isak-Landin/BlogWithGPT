@@ -25,7 +25,7 @@ function start_edit_note(event) {
     var entry__content_text = entry__content.innerHTML;
 
     var note_data = {
-        'mongo_id': note_mongo_id,
+        '_id': note_mongo_id,
         'content': entry__content_text
      };
     note_being_edited.push(note_data);
@@ -52,14 +52,14 @@ function render_edit_mode(entry, entry__content) {
     save_button.className = 'entry__footer-button';
     save_button.role = 'button';
     save_button.textContent = 'Save';
-    save_button.addEventListener('click', save_edit_mode);
+    save_button.addEventListener('click', (event) => save_edit_mode(event, entry));
 
     var cancel_button = document.createElement('button');
     cancel_button.id = 'entry__footer-cancel-button';
     cancel_button.className = 'entry__footer-button';
     cancel_button.role = 'button';
     cancel_button.textContent = 'Cancel';
-    cancel_button.addEventListener('click', cancel_edit_mode);
+    cancel_button.addEventListener('click', (event) => cancel_edit_mode(event, entry));
 
     var entry__footer = entry.querySelector('.entry__footer');
     entry__footer.replaceChild(save_button, delete_link);
@@ -71,13 +71,34 @@ function save_edit_mode(event, entry) {
     event.preventDefault();
 
     var id_of_edited_note = entry.getAttribute('id'); // Get the id of the note that was edited
-    var id_of_note_being_edited = note_being_edited[0][0];
+    var id_of_note_being_edited = note_being_edited[0]['_id'];
+
+    console.log(note_being_edited);
+    console.log(id_of_edited_note);
+    console.log(id_of_note_being_edited);
 
     if (id_of_edited_note!== id_of_note_being_edited){
-        document.alert('Internal error: The id of the edited note does not match the id of the note being edited!');
+        alert('Internal error: The id of the edited note does not match the id of the note being edited!');
         return;
     }
 
+    var textarea = document.getElementById('entry__content-edit-mode');
+    var content = textarea.value.trim();
+    if (content.length === 0){
+        document.alert('You cannot save an empty note!');
+        return;
+    }
+    var url = '/edit/save/' + id_of_edited_note;
+    const data = {
+        'content': content,
+    }
+    fetch(url, {
+        method: 'PUT',    // Specify the method
+        headers: {
+            'Content-Type': 'application/json',  // Set content type to JSON
+        },
+        body: JSON.stringify(data)
+    })
 
     exit_edit_mode(event);
 }
