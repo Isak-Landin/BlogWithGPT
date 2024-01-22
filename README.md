@@ -34,4 +34,4 @@ No instructions are available yet. Please wait for completion of v. 1.0.0 or use
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-username/your-project.git
+   git clone https://github.com/Isak-Landin/BlogWithGPT.git
