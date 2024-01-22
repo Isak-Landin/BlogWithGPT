@@ -21,7 +21,8 @@ def home():
         (
             entry["content"],
             entry["date"],
-            datetime.datetime.strptime(entry["date"], "%Y-%m-%d").strftime("%b %d")
+            datetime.datetime.strptime(entry["date"], "%Y-%m-%d").strftime("%b %d"),
+            str(entry["_id"])
         )
         for entry in current_app.db.entries.find({}).sort("date", pymongo.DESCENDING)
     ]
