@@ -13,7 +13,7 @@ import pymongo
 edit_bp = Blueprint('edit', __name__)
 
 
-@edit_bp.route("/edit/<mongo_id>", methods=['POST', 'GET'])
+@edit_bp.route("/<mongo_id>", methods=['POST', 'GET'])
 def edit(mongo_id):
     if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
         abort(404)
@@ -37,13 +37,40 @@ def edit(mongo_id):
     return abort(Response('Something went wrong! Entry: ' + str(entry) if entry else 'Some unknown error, contact '
                                                                                      'support', 404))
 
+
 @edit_bp.route("/delete/<mongo_id>", methods=['DELETE'])
 def delete(mongo_id):
-    pass
+    if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
+        abort(404)
+
 
 @edit_bp.route('/save/<mongo_id>', methods=['PUT'])
 def save(mongo_id):
-    pass
+    print(mongo_id)
+    print(is_valid_object_id(mongo_id))
+    print(does_entry_exist(mongo_id))
+    if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
+        abort(404)
+
+    # Parse JSON data sent with the request
+    data = request.get_json()
+
+    # Extract content field
+    _id = mongo_id
+    content = data.get('content')
+
+    # Update database
+    try:
+        current_app.db.entries.update_one({"_id": ObjectId(_id)}, {"$set": {"content": content}})
+    except InvalidId:
+        return jsonify({'message': 'Invalid ID!'})
+    except pymongo.errors.DuplicateKeyError:
+        return jsonify({'message': 'Note exists as duplicate!'})
+    except Exception as e:
+        return jsonify({'message': str(e)})
+
+    # Return a Response
+    return jsonify({'message': 'Note updated successfully!'})
 
 
 def is_valid_object_id(id):
