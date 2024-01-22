@@ -1,13 +1,10 @@
-from flask import Flask, render_template, request, jsonify, Blueprint
+from flask import Flask, render_template, request, jsonify
 from flask import current_app
-
 import pymongo
-
 import datetime
 
+from . import search_bp
 from management_helpers.format_json_for_frontend import format_results
-
-search_bp = Blueprint('search_bp', __name__)
 
 
 @search_bp.route('/search/<searchterm>', methods=['GET',])

@@ -1,12 +1,11 @@
 from flask import Blueprint, request, current_app, render_template, jsonify
-from create_form_fields import NoteForm
 import pymongo
-
 import datetime
 
-from management_helpers.format_json_for_frontend import format_results
 
-home_bp = Blueprint('home', __name__)
+from management_helpers.format_json_for_frontend import format_results
+from . import home_bp
+from forms import NoteForm
 
 
 @home_bp.route("/", methods=['GET', 'POST'])

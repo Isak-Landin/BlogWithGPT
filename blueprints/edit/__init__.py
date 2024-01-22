@@ -1,5 +1,6 @@
 from flask import Blueprint
 
-home_bp = Blueprint('home', __name__)
+
+edit_bp = Blueprint('edit', __name__)
 
 from . import views

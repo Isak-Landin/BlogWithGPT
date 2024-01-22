@@ -1,16 +1,14 @@
 import os
-
-from flask import Flask, render_template, request, jsonify
-
-from blueprints.home.home import home_bp
-from blueprints.search.search import search_bp
-from blueprints.edit.edit import edit_bp
-
+from flask import Flask, jsonify
 import datetime
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 
-from flask_wtf.csrf import CSRFProtect
+from blueprints.home import home_bp
+from blueprints.search import search_bp
+from blueprints.edit import edit_bp
+
 
 
 load_dotenv()
@@ -35,6 +33,9 @@ def create_app():
 
     csrf.init_app(app=app)
 
+    @app.route('/generate-csrf-token')
+    def generate_csrf_token():
+        return jsonify({'csrf_token': generate_csrf()})
     @app.errorhandler(400)
     def bad_request(error):
         print(error)

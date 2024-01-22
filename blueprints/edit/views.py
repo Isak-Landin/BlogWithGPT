@@ -1,16 +1,13 @@
 from flask import (
-    Blueprint, Flask, render_template,
     request, redirect, url_for, jsonify, current_app,
     abort, Response
 )
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
-
-from create_form_fields import NoteForm
-
 import pymongo
 
-edit_bp = Blueprint('edit', __name__)
+from forms import NoteForm
+from . import edit_bp
 
 
 @edit_bp.route("/<mongo_id>", methods=['POST', 'GET'])
