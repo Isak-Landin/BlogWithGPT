@@ -6,7 +6,7 @@ def format_results(entries):
     """
     Expects a mongodb cursor of entries, converted into a list.
     :param entries:
-    :return: A application-compatible list of dictionaries. Each dictionary corresponds to a single entry in the database.
+    :return: An application-compatible list of dictionaries. Each dictionary corresponds to a single entry in the database.
        Each dictionary contains the following keys:
        - mongo_id: The id of the entry in the database.
        - title: The title of the entry created with the content column in the database.
@@ -16,11 +16,11 @@ def format_results(entries):
     """
     formatted_results = [
         {
-            'mongo_id': str(entry["_id"]),
             'title': entry["content"][:30] + '...' if len(entry["content"]) > 30 else entry["content"],
             'date': entry["date"],
             'content': entry["content"],
-            'formattedDate': format_date(entry["date"])
+            'formattedDate': format_date(entry["date"]),
+            '_id': str(entry["_id"])
         }
         for entry in entries
     ]
