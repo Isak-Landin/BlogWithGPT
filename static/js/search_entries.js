@@ -82,6 +82,7 @@ function renderEntries(entries) {
     entries.forEach(entry => {
         const article = document.createElement('article');
         article.className = 'entry';
+        article.id = entry._id;
 
         const header = document.createElement('div');
         header.className = 'entry__header';
