@@ -1,2 +1,37 @@
-# BlogWithGPT
-A fun little test project that is a simple flask application with some chatGPT integration.
+# Note Analysis and Discussion Platform
+
+![Project Logo](https://github.com/Isak-Landin/BlogWithGPT/blob/main/logo.png)
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Integration](#api-integration)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Introduction
+
+The Note Analysis and Discussion Platform is a web application that allows users to create, edit, delete, search for notes, and engage in discussions around those notes. It leverages the power of ChatGPT to analyze the content of the notes and generate conclusions based on user questions.
+
+## Features
+
+1. **Create, Edit, Delete Notes**: Users can create, edit, and delete notes, making it easy to capture and organize their thoughts.
+
+2. **Search Functionality**: The application provides a robust search functionality, allowing users to quickly find relevant notes.
+
+3. **Discussion Threads**: Users can select multiple notes and create discussion threads around them by posing questions.
+
+4. **GPT Integration**: The platform integrates with ChatGPT's API to analyze the contents of notes in the context of user questions.
+
+5. **Conclusion Generation**: ChatGPT generates conclusions for each note individually and provides an overall conclusion for all the notes in the context of the user's question.
+
+## Installation
+
+No instructions are available yet. Please wait for completion of v. 1.0.0 or use at your own risk.
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/your-username/your-project.git
