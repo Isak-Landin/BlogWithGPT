@@ -16,6 +16,8 @@
 
 The Note Analysis and Discussion Platform is a web application that allows users to create, edit, delete, search for notes, and engage in discussions around those notes. It leverages the power of ChatGPT to analyze the content of the notes and generate conclusions based on user questions.
 
+In later versions it will aim to work as an assistant for your daily life and/or work-related workflow.
+
 ## Features
 
 1. **Create, Edit, Delete Notes**: Users can create, edit, and delete notes, making it easy to capture and organize their thoughts.
