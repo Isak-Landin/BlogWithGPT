@@ -52,12 +52,14 @@ function render_edit_mode(entry, entry__content) {
     save_button.className = 'entry__footer-button';
     save_button.role = 'button';
     save_button.textContent = 'Save';
+    save_button.addEventListener('click', save_edit_mode);
 
     var cancel_button = document.createElement('button');
     cancel_button.id = 'entry__footer-cancel-button';
     cancel_button.className = 'entry__footer-button';
     cancel_button.role = 'button';
     cancel_button.textContent = 'Cancel';
+    cancel_button.addEventListener('click', cancel_edit_mode);
 
     var entry__footer = entry.querySelector('.entry__footer');
     entry__footer.replaceChild(save_button, delete_link);
@@ -65,8 +67,27 @@ function render_edit_mode(entry, entry__content) {
 
 }
 
-function save_edit_mode(event) {}
+function save_edit_mode(event, entry) {
+    event.preventDefault();
 
-function cancel_edit_mode(event) {}
+    var id_of_edited_note = entry.getAttribute('id'); // Get the id of the note that was edited
+    var id_of_note_being_edited = note_being_edited[0][0];
 
-function exit_edit_mode(event) {}
+    if (id_of_edited_note!== id_of_note_being_edited){
+        document.alert('Internal error: The id of the edited note does not match the id of the note being edited!');
+        return;
+    }
+
+
+    exit_edit_mode(event);
+}
+
+function cancel_edit_mode(event) {
+    event.preventDefault();
+
+    exit_edit_mode(event);
+}
+
+function exit_edit_mode(event) {
+
+}
