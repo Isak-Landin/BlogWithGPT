@@ -1,4 +1,4 @@
-const note_editing = []
+const note_being_edited = []
 
 document.addEventListener('DOMContentLoaded', () => {
         let all_edit_links = document.querySelectorAll('.entry__footer-edit');
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 )
 
 function start_edit_note(event) {
-    if (note_editing.length !== 0){
+    if (note_being_edited.length !== 0){
         document.alert('You cannot edit more than one note at a time!');
         return;
     }
@@ -19,12 +19,33 @@ function start_edit_note(event) {
 
     var edit_link = event.currentTarget;
     var entry = edit_link.parentElement.parentElement;
-    var entry_content = entry.querySelector('.entry__content');
+    var entry__content = entry.querySelector('.entry__content');
 
     var note_mongo_id = entry.getAttribute('id');
-    var entry_content_text = entry_content.innerHTML;
+    var entry__content_text = entry__content.innerHTML;
 
-    const note_data = {note_mongo_id, entry_content_text};
-    note_editing.push(note_data);
+    var note_data = {
+        'mongo_id': note_mongo_id,
+        'content': entry__content_text
+     };
+    note_being_edited.push(note_data);
+    render_edit_mode(entry, entry__content);
+}
 
+function render_edit_mode(entry, entry__content) {
+    if (note_being_edited.length === 0){
+        document.alert('You must start editing a note first!');
+        return;
+    }
+
+    var textarea = document.createElement('textarea');
+    textarea.id = 'entry__content-edit-mode';
+    textarea.value = note_being_edited[0].content.trim();
+
+    console.log(entry);
+    console.log(entry__content);
+    entry.replaceChild(textarea, entry__content);
+
+    entry.querySelector('.entry__footer-edit').remove();
+    entry.querySelector('.entry__footer-remove').remove();
 }
