@@ -42,10 +42,31 @@ function render_edit_mode(entry, entry__content) {
     textarea.id = 'entry__content-edit-mode';
     textarea.value = note_being_edited[0].content.trim();
 
-    console.log(entry);
-    console.log(entry__content);
     entry.replaceChild(textarea, entry__content);
 
-    entry.querySelector('.entry__footer-edit').remove();
-    entry.querySelector('.entry__footer-remove').remove();
+    var edit_link = entry.querySelector('.entry__footer-edit');
+    var delete_link = entry.querySelector('.entry__footer-remove');
+
+    var save_button = document.createElement('button');
+    save_button.id = 'entry__footer-save-button';
+    save_button.className = 'entry__footer-button';
+    save_button.role = 'button';
+    save_button.textContent = 'Save';
+
+    var cancel_button = document.createElement('button');
+    cancel_button.id = 'entry__footer-cancel-button';
+    cancel_button.className = 'entry__footer-button';
+    cancel_button.role = 'button';
+    cancel_button.textContent = 'Cancel';
+
+    var entry__footer = entry.querySelector('.entry__footer');
+    entry__footer.replaceChild(save_button, delete_link);
+    entry__footer.replaceChild(cancel_button, edit_link);
+
 }
+
+function save_edit_mode(event) {}
+
+function cancel_edit_mode(event) {}
+
+function exit_edit_mode(event) {}
