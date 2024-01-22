@@ -1,0 +1,12 @@
+#entry__content-edit-mode {
+    width: 100%;       /* Makes the textarea take the full width of its parent container */
+    height: 150px;     /* Adjust the height as needed */
+    padding: 10px;     /* Adds some padding inside the textarea */
+    border: 1px solid #ccc; /* Adds a border to the textarea */
+    border-radius: 4px; /* Optional: rounds the corners of the textarea */
+    font-size: 16px;   /* Adjust the font size as needed */
+    line-height: 1.5;  /* Adjust line height for better readability */
+    margin: 10px 0;    /* Adds some margin around the textarea */
+    resize: vertical;  /* Allows the user to resize the textarea vertically */
+    overflow: auto;    /* Adds a scrollbar if the text overflows */
+}
