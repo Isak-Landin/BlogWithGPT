@@ -1,39 +1,33 @@
 from flask import (
     request, redirect, url_for, jsonify, current_app,
-    abort, Response
+    abort, Response, session
 )
+
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
-import pymongo
 
-from forms import NoteForm
+from .forms import NoteForm
+from models.notes import Note
 from . import edit_bp
 
 
-@edit_bp.route("/<mongo_id>", methods=['POST', 'GET'])
-def edit(mongo_id):
-    if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
-        abort(404)
-
+@edit_bp.route('/add', methods=['POST'])
+def add():
     form = NoteForm()
+
     if form.validate_on_submit():
-        entry_id = mongo_id
-        entry_content = request.form.get("content")
-        current_app.db.entries.update_one({"_id": ObjectId(entry_id)}, {"$set": {"content": entry_content}})
+        # Parse JSON data sent with the request
+        data = request.get_json()
 
-    entry = None
-    if request.method == 'GET':
-        entry = current_app.db.entries.find_one({"_id": ObjectId(mongo_id)}).sort("date", pymongo.DESCENDING)
-        if entry:
-            return jsonify({'content': entry['content']})  # Content derived from db.test.find({"_id" : ObjectId(
-            # mongo_id)}).sort("date",
-        # pymongo.DESCENDING).
-    elif request.method == 'POST':
-        return redirect(url_for('home.home'))
+        # Extract content field
+        content = data.get('content')
 
-    return abort(Response('Something went wrong! Entry: ' + str(entry) if entry else 'Some unknown error, contact '
-                                                                                     'support', 404))
+        # Get user_id field from session
+        user_id = session.get('user_id')
 
+
+    # Return a Response
+    return jsonify({'message': 'Note added successfully!'})
 
 @edit_bp.route("/delete/<mongo_id>", methods=['DELETE'])
 def delete(mongo_id):
@@ -41,30 +35,20 @@ def delete(mongo_id):
         abort(404)
 
 
-@edit_bp.route('/save/<mongo_id>', methods=['PUT'])
-def save(mongo_id):
-    print(mongo_id)
-    print(is_valid_object_id(mongo_id))
-    print(does_entry_exist(mongo_id))
+@edit_bp.route('/edit/<mongo_id>', methods=['PUT'])
+def edit(mongo_id):
     if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
         abort(404)
+    form = NoteForm()
 
-    # Parse JSON data sent with the request
-    data = request.get_json()
+    if form.validate_on_submit():
+        # Parse JSON data sent with the request
+        data = request.get_json()
 
-    # Extract content field
-    _id = mongo_id
-    content = data.get('content')
+        # Extract content field
+        _id = mongo_id
+        content = data.get('content')
 
-    # Update database
-    try:
-        current_app.db.entries.update_one({"_id": ObjectId(_id)}, {"$set": {"content": content}})
-    except InvalidId:
-        return jsonify({'message': 'Invalid ID!'})
-    except pymongo.errors.DuplicateKeyError:
-        return jsonify({'message': 'Note exists as duplicate!'})
-    except Exception as e:
-        return jsonify({'message': str(e)})
 
     # Return a Response
     return jsonify({'message': 'Note updated successfully!'})
