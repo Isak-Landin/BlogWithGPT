@@ -1,14 +1,16 @@
 from flask import Blueprint, request, current_app, render_template, jsonify
 import pymongo
 import datetime
+from flask_login import login_required
 
 
 from management_helpers.format_json_for_frontend import format_results
 from . import home_bp
-from forms import NoteForm
+from .forms import NoteForm
 
 
 @home_bp.route("/", methods=['GET', 'POST'])
+@login_required
 def home():
     form = NoteForm()
     if form.validate_on_submit():
@@ -30,6 +32,7 @@ def home():
 
 
 @home_bp.route("/load-default-notes", methods=['GET',])
+@login_required
 def load_notes():
     entries = current_app.db.entries.find({}).sort("date", pymongo.DESCENDING)
 
