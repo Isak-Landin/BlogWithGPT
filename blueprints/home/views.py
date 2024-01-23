@@ -6,26 +6,22 @@ from flask_login import login_required
 
 from management_helpers.format_json_for_frontend import format_results
 from . import home_bp
-from .forms import NoteForm
+from blueprints.edit.forms import NoteForm
 
 
 @home_bp.route("/", methods=['GET', 'POST'])
 @login_required
 def home():
     form = NoteForm()
-    if form.validate_on_submit():
-        entry_content = request.form.get("content")
-        formatted_date = datetime.datetime.today().strftime("%Y-%m-%d")
-        current_app.db.entries.insert_one({"content": entry_content, "date": formatted_date})
 
     entries_with_date = [
         (
             entry["content"],
-            entry["date"],
-            datetime.datetime.strptime(entry["date"], "%Y-%m-%d").strftime("%b %d"),
+            entry["updated_at"],
+            entry["updated_at"].strftime("%b %d"),
             str(entry["_id"])
         )
-        for entry in current_app.db.entries.find({}).sort("date", pymongo.DESCENDING)
+        for entry in current_app.db.entries.find({}).sort("updated_at", pymongo.DESCENDING)
     ]
 
     return render_template("home.html", entries=entries_with_date, form=form)

@@ -24,12 +24,12 @@
     <main class="main">
         <section>
             {% if current_user.is_authenticated %}
-                <h1>Add new entry {{ current_user.name }}</h1>
+                <h1>Add new entry {{ current_user.username }}</h1>
             {% else %}
                 <h1>Add new entry</h1>
             {% endif %}
 
-            <form class="form" method="POST">
+            <form class="form" method="POST" action="{{ url_for('edit.add') }}">
                 {{ form.hidden_tag() }}
                 <p class="form__input">
                     {{ form.content.label(class="form__label") }}
@@ -37,7 +37,9 @@
                     <!-- <label for="entry" class="form__label">Entry contents:</label>
                     <textarea name="content" id="entry" class="form__textarea"></textarea> -->
                 </p>
-                <button type="submit" class="form__submit">Add entry</button>
+
+                {{ form.submit(class="form__submit", type="submit", value="Add Entry") }}
+                <!-- <button type="submit" class="form__submit">Add entry</button> -->
             </form>
         </section>
         <section>

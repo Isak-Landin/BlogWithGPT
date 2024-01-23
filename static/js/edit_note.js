@@ -88,7 +88,7 @@ function save_edit_mode(event, entry) {
         document.alert('You cannot save an empty note!');
         return;
     }
-    var url = '/edit/save/' + id_of_edited_note;
+    var url = '/edit/edit/' + id_of_edited_note;
     const data = {
         'content': content,
     }

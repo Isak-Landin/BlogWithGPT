@@ -1,11 +1,11 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, redirect, url_for
 import datetime
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from flask_mongoengine import MongoEngine
 from flask_wtf.csrf import CSRFProtect, generate_csrf
-from flask_login import LoginManager
+from flask_login import LoginManager, login_required, current_user
 from bson.objectid import ObjectId
 
 from blueprints.home import home_bp
@@ -19,6 +19,8 @@ from models.user import User
 load_dotenv()
 
 csrf = CSRFProtect()
+
+EXEMPT_ROUTES = ['auth.login', 'auth.register', 'static']
 
 
 def create_app():
@@ -54,6 +56,7 @@ def create_app():
     csrf.init_app(app=app)
 
     @app.route('/generate-csrf-token')
+    @login_required
     def generate_csrf_token():
         return jsonify({'csrf_token': generate_csrf()})
 
@@ -67,7 +70,6 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        print('actually implementing user loader')
         try:
             # Convert the user_id to ObjectId and query the database
             return User.objects(pk=ObjectId(user_id)).first()
@@ -75,5 +77,10 @@ def create_app():
             # Handle any exception (e.g., if user_id is not a valid ObjectId)
             print(e)
             return None
+
+    @app.before_request
+    def check_user_authentication():
+        if request.endpoint not in EXEMPT_ROUTES and not current_user.is_authenticated:
+            return redirect(url_for(login_manager.login_view))
 
     return app
