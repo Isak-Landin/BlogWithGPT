@@ -23,7 +23,12 @@
 
     <main class="main">
         <section>
-            <h1>Add new entry</h1>
+            {% if current_user.is_authenticated %}
+                <h1>Add new entry {{ current_user.name }}</h1>
+            {% else %}
+                <h1>Add new entry</h1>
+            {% endif %}
+
             <form class="form" method="POST">
                 {{ form.hidden_tag() }}
                 <p class="form__input">
