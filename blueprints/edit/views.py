@@ -56,6 +56,7 @@ def edit(mongo_id):
     if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
         abort(404)
     form = NoteForm()
+    response = None
 
     if form.validate_on_submit():
         # Parse JSON data sent with the request
@@ -63,11 +64,30 @@ def edit(mongo_id):
 
         # Extract content field
         _id = mongo_id
+        # Make _id of string to _id: ObjectId
+        _id = ObjectId(_id)
+        current_user_string = str(current_user.pk)
+
+        # Get content of edited note request
         content = data.get('content')
 
+        print(current_user.pk)
+        print(_id)
+
+        note = Note.objects(user_id=current_user_string, pk=_id).first()
+        print(note)
+        if note:
+            success = note.modify(content=content, updated_at=datetime.datetime.now())
+            if success:
+                response = jsonify({'message': 'Note edited successfully!'})
+            else:
+                response = jsonify({'error': 'Note not edited!'})
 
     # Return a Response
-    return jsonify({'message': 'Note updated successfully!'})
+    if not response:
+        response = jsonify({'error': 'Note not found!'})
+
+    return response
 
 
 def is_valid_object_id(id):
