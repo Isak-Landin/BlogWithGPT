@@ -1,4 +1,5 @@
 const note_being_edited = []
+var test_token = null;
 
 document.addEventListener('DOMContentLoaded', () => {
         let all_edit_links = document.querySelectorAll('.entry__footer-edit');
@@ -26,7 +27,9 @@ function start_edit_note(event) {
 
     var note_data = {
         '_id': note_mongo_id,
-        'content': entry__content_text
+        'content': entry__content_text,
+        'entry': entry,
+        '_id': note_mongo_id,
      };
     note_being_edited.push(note_data);
     render_edit_mode(entry, entry__content);
@@ -38,32 +41,55 @@ function render_edit_mode(entry, entry__content) {
         return;
     }
 
-    var textarea = document.createElement('textarea');
-    textarea.id = 'entry__content-edit-mode';
-    textarea.value = note_being_edited[0].content.trim();
+    fetch('/generate-csrf-token')
+        .then(response => response.json())
+        .then(data => {
+            if (data.csrf_token === null){
+                document.alert('Error: Could not generate CSRF token!');
+                return;
+            }
+            const form = document.createElement('form');
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = data.csrf_token;
+            test_token = data.csrf_token;
 
-    entry.replaceChild(textarea, entry__content);
+            form.appendChild(csrfInput);
 
-    var edit_link = entry.querySelector('.entry__footer-edit');
-    var delete_link = entry.querySelector('.entry__footer-remove');
+            var textarea = document.createElement('textarea');
+            textarea.id = 'entry__content-edit-mode';
+            textarea.value = note_being_edited[0].content.trim();
 
-    var save_button = document.createElement('button');
-    save_button.id = 'entry__footer-save-button';
-    save_button.className = 'entry__footer-button';
-    save_button.role = 'button';
-    save_button.textContent = 'Save';
-    save_button.addEventListener('click', (event) => save_edit_mode(event, entry));
+            form.appendChild(textarea);
 
-    var cancel_button = document.createElement('button');
-    cancel_button.id = 'entry__footer-cancel-button';
-    cancel_button.className = 'entry__footer-button';
-    cancel_button.role = 'button';
-    cancel_button.textContent = 'Cancel';
-    cancel_button.addEventListener('click', (event) => cancel_edit_mode(event, entry));
+            entry.replaceChild(form, entry__content);
 
-    var entry__footer = entry.querySelector('.entry__footer');
-    entry__footer.replaceChild(save_button, delete_link);
-    entry__footer.replaceChild(cancel_button, edit_link);
+            var edit_link = entry.querySelector('.entry__footer-edit');
+            var delete_link = entry.querySelector('.entry__footer-remove');
+
+            var save_button = document.createElement('button');
+            save_button.id = 'entry__footer-save-button';
+            save_button.className = 'entry__footer-button';
+            save_button.role = 'button';
+            save_button.textContent = 'Save';
+            save_button.addEventListener('click', (event) => save_edit_mode(event, entry));
+
+            var cancel_button = document.createElement('button');
+            cancel_button.id = 'entry__footer-cancel-button';
+            cancel_button.className = 'entry__footer-button';
+            cancel_button.role = 'button';
+            cancel_button.textContent = 'Cancel';
+            cancel_button.addEventListener('click', (event) => cancel_edit_mode(event, entry));
+
+            var entry__footer = entry.querySelector('.entry__footer');
+            entry__footer.replaceChild(save_button, delete_link);
+            entry__footer.replaceChild(cancel_button, edit_link);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            exit_edit_mode();
+        });
 
 }
 
@@ -82,6 +108,8 @@ function save_edit_mode(event, entry) {
         return;
     }
 
+    // TODO: Save the edited note to the database and keep this section in mind for further development
+
     var textarea = document.getElementById('entry__content-edit-mode');
     var content = textarea.value.trim();
     if (content.length === 0){
@@ -96,9 +124,25 @@ function save_edit_mode(event, entry) {
         method: 'PUT',    // Specify the method
         headers: {
             'Content-Type': 'application/json',  // Set content type to JSON
+            'X-CSRF-TOKEN': test_token
         },
         body: JSON.stringify(data)
     })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message){
+            console.log(data.message);
+        } else if (data.error){
+            console.log(data.error);
+        }
+        else {
+            console.log(data);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.alert('Internal error: Could not save the edited note!: ' + error);
+    });
 
     exit_edit_mode(event);
 }
@@ -109,6 +153,9 @@ function cancel_edit_mode(event) {
     exit_edit_mode(event);
 }
 
-function exit_edit_mode(event) {
+function exit_edit_mode(event, entry) {
+    if ( (entry === undefined || entry === null) && note_being_edited.length >== 1){
+        entry = event.currentTarget.parentElement.parentElement;
 
+    }
 }
