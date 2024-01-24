@@ -17,9 +17,9 @@ def format_results(entries):
     formatted_results = [
         {
             'title': entry["content"][:30] + '...' if len(entry["content"]) > 30 else entry["content"],
-            'date': entry["date"],
+            'date': entry["updated_at"],
             'content': entry["content"],
-            'formattedDate': format_date(entry["date"]),
+            'formattedDate': format_date(entry["updated_at"]),
             '_id': str(entry["_id"])
         }
         for entry in entries
@@ -32,4 +32,4 @@ def format_date(date_str):
     if date_str is None:
         return 'Unspecified'
     # Convert 'YYYY-MM-DD' to a more readable format like 'Jan 01'
-    return datetime.datetime.strptime(date_str, "%Y-%m-%d").strftime("%b %d")
+    return date_str.strftime("%b %d")

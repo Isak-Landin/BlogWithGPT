@@ -27,18 +27,25 @@ function start_edit_note(event) {
 
     var note_data = {
         '_id': note_mongo_id,
+        'entry__content': entry__content,
         'content': entry__content_text,
         'entry': entry,
         '_id': note_mongo_id,
      };
     note_being_edited.push(note_data);
-    render_edit_mode(entry, entry__content);
+    render_edit_mode(event);
 }
 
-function render_edit_mode(entry, entry__content) {
+function render_edit_mode(event) {
     if (note_being_edited.length === 0){
         document.alert('You must start editing a note first!');
         return;
+    }
+
+    const entry = note_being_edited[0].entry;
+    const entry__content = entry.querySelector('.entry__content');
+    if (entry__content === undefined || entry__content === null) {
+        entry__content = note_being_edited[0].entry__content;
     }
 
     fetch('/generate-csrf-token')
@@ -93,8 +100,10 @@ function render_edit_mode(entry, entry__content) {
 
 }
 
-function save_edit_mode(event, entry) {
+function save_edit_mode(event) {
     event.preventDefault();
+
+    const entry = note_being_edited[0].entry;
 
     var id_of_edited_note = entry.getAttribute('id'); // Get the id of the note that was edited
     var id_of_note_being_edited = note_being_edited[0]['_id'];
@@ -107,8 +116,6 @@ function save_edit_mode(event, entry) {
         alert('Internal error: The id of the edited note does not match the id of the note being edited!');
         return;
     }
-
-    // TODO: Save the edited note to the database and keep this section in mind for further development
 
     var textarea = document.getElementById('entry__content-edit-mode');
     var content = textarea.value.trim();
@@ -153,9 +160,16 @@ function cancel_edit_mode(event) {
     exit_edit_mode(event);
 }
 
-function exit_edit_mode(event, entry) {
-    if ( (entry === undefined || entry === null) && note_being_edited.length >== 1){
+function exit_edit_mode(event) {
+    const entry = note_being_edited[0].entry;
+    if ( (entry === undefined || entry === null) && note_being_edited.length >= 1){
         entry = event.currentTarget.parentElement.parentElement;
 
+    } else if (note_being_edited.length === 0){
+     // TODO: In this case we should kill the edit mode, remove contents of the note_being_edited, then alert, log and return
     }
-}
+
+    // TODO what we could do instead of replacing the inner textarea and form with a custom built tag...
+    // TODO let's instead use the same generation method that we use to generate each note when searching for notes...
+    // The referenced to this exists in search_entries.js
+}   // TODO Let's make the function used in the search_entries.js file a stand-alone function and import it to both files...
