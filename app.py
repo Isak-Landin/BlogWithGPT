@@ -20,7 +20,7 @@ load_dotenv()
 
 csrf = CSRFProtect()
 
-EXEMPT_ROUTES = ['auth.login', 'auth.register', 'static']
+EXEMPT_ROUTES = ['auth_bp.login', 'auth_bp.register', 'static']
 
 
 def create_app():
@@ -42,6 +42,7 @@ def create_app():
     login_manager = LoginManager()
     # initialize login manager for application
     login_manager.init_app(app)
+    login_manager.login_view = 'auth_bp.login'
     # Store login manager for use in different parts of the application
     app.login_manager = login_manager
 
