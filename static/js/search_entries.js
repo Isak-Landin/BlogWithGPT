@@ -76,6 +76,7 @@ function renderError(error) {
 }
 
 function renderEntries(entries) {
+    // Reformatting in order to make the rendering of the content a application-available function.
     const container = document.getElementById('searchResults'); // The container where entries are displayed
     container.innerHTML = ''; // Clear existing entries
 
