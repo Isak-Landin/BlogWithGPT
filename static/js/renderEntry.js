@@ -1,4 +1,6 @@
-function renderEntry(entry) {
+import {start_edit_mode} from '/static/js/edit_note.js';
+
+export function renderEntry(entry) {
     const article = document.createElement('article');
     article.className = 'entry';
     article.id = entry._id;
@@ -29,6 +31,7 @@ function renderEntry(entry) {
     editLink.href = '#';
     editLink.className = 'entry__footer-edit';
     editLink.textContent = '✎';
+    editLink.addEventListener('click', start_edit_mode);
 
     const removeLink = document.createElement('a');
     removeLink.href = '#';
@@ -42,5 +45,5 @@ function renderEntry(entry) {
     article.appendChild(content);
     article.appendChild(footer);
 
-    container.appendChild(article);
+    return article;
 }
