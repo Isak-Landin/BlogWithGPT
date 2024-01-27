@@ -11,6 +11,7 @@ import datetime
 from .forms import NoteForm
 from models.notes import Note
 from . import edit_bp
+from management_helpers.format_json_for_frontend import format_results
 
 
 @edit_bp.route('/add', methods=['POST', 'GET'])
@@ -88,6 +89,16 @@ def edit(mongo_id):
         response = jsonify({'error': 'Note not found!'})
 
     return response
+
+
+# Once a note is saved, we need to access the new note and present it's new values to the user
+@edit_bp.route('/<mongo_id>', methods=['GET'])
+def new_note(mongo_id):
+    if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
+        abort(404)
+    note = current_app.db.notes.find_one({"_id": ObjectId(mongo_id)})
+    note = format_results(list(note))
+    return jsonify(note[0])
 
 
 def is_valid_object_id(id):
