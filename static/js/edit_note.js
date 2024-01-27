@@ -1,16 +1,28 @@
+/*
+{
+        '_id': note_mongo_id,
+        'entry__content': entry__content,
+        'content': entry__content_text,
+        'entry': entry,
+        '_id': note_mongo_id,
+     }
+*/
+
 const note_being_edited = []
+
+
 var test_token = null;
 
 document.addEventListener('DOMContentLoaded', () => {
         let all_edit_links = document.querySelectorAll('.entry__footer-edit');
 
         all_edit_links.forEach(edit_link => {
-            edit_link.addEventListener('click', start_edit_note)
+            edit_link.addEventListener('click', start_edit_mode)
         })
     }
 )
 
-function start_edit_note(event) {
+export function start_edit_mode(event) {
     if (note_being_edited.length !== 0){
         document.alert('You cannot edit more than one note at a time!');
         return;
@@ -101,6 +113,7 @@ function render_edit_mode(event) {
 }
 
 function save_edit_mode(event) {
+    var cancel_or_save = 'save'
     event.preventDefault();
 
     const entry = note_being_edited[0].entry;
@@ -147,11 +160,12 @@ function save_edit_mode(event) {
         }
     })
     .catch(error => {
+        cancel_or_save = 'cancel';
         console.error('Error:', error);
         document.alert('Internal error: Could not save the edited note!: ' + error);
     });
 
-    exit_edit_mode(event);
+    exit_edit_mode(event, cancel_or_save);
 }
 
 function cancel_edit_mode(event) {
@@ -160,14 +174,27 @@ function cancel_edit_mode(event) {
     exit_edit_mode(event);
 }
 
-function exit_edit_mode(event) {
-    const entry = note_being_edited[0].entry;
-    if ( (entry === undefined || entry === null) && note_being_edited.length >= 1){
-        entry = event.currentTarget.parentElement.parentElement;
-
-    } else if (note_being_edited.length === 0){
-     // TODO: In this case we should kill the edit mode, remove contents of the note_being_edited, then alert, log and return
+function exit_edit_mode(event, save_or_cancel = 'cancel') {
+    if (note_being_edited.length === 0){
+        document.alert('Something went wrong! Please refresh the page and try again!');
+        return;
     }
+
+    if (save_or_cancel === 'save') {
+        url = '/edit/' + note_being_edited[0]._id;
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const new_article = renderEntry(data);
+            const searchResults = document.querySelector('.searchResults');
+            searchResults.replaceChild(new_article, note_being_edited[0].entry);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+
+
 
     // TODO what we could do instead of replacing the inner textarea and form with a custom built tag...
     // TODO let's instead use the same generation method that we use to generate each note when searching for notes...
