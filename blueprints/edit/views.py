@@ -11,13 +11,12 @@ import datetime
 from .forms import NoteForm
 from models.notes import Note
 from . import edit_bp
-from management_helpers.format_json_for_frontend import format_results
+from management_helpers.format_json_for_frontend import format_date
 
 
 @edit_bp.route('/add', methods=['POST', 'GET'])
 @login_required
 def add():
-    print('actually entering')
     form = NoteForm()
     response = {'message': ''}
     if form.validate_on_submit():
@@ -63,20 +62,14 @@ def edit(mongo_id):
         # Parse JSON data sent with the request
         data = request.get_json()
 
-        # Extract content field
-        _id = mongo_id
-        # Make _id of string to _id: ObjectId
-        _id = ObjectId(_id)
+        _id = ObjectId(mongo_id)
         current_user_string = str(current_user.pk)
 
         # Get content of edited note request
         content = data.get('content')
 
-        print(current_user.pk)
-        print(_id)
-
+        # Get the note that the user wants to edit
         note = Note.objects(user_id=current_user_string, pk=_id).first()
-        print(note)
         if note:
             success = note.modify(content=content, updated_at=datetime.datetime.now())
             if success:
@@ -93,17 +86,44 @@ def edit(mongo_id):
 
 # Once a note is saved, we need to access the new note and present it's new values to the user
 @edit_bp.route('/<mongo_id>', methods=['GET'])
-def new_note(mongo_id):
+def new_saved_note(mongo_id):
+    _id = ObjectId(mongo_id)
     if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
         abort(404)
-    note = current_app.db.notes.find_one({"_id": ObjectId(mongo_id)})
-    note = format_results(list(note))
-    return jsonify(note[0])
+    note = Note.objects(user_id=str(current_user.pk), pk=_id).first()
 
+    if not note:
+        abort(500)
 
-def is_valid_object_id(id):
+    def format_response_new_note(new_note_from_entry):
+        return {
+            'title': new_note_from_entry.content[:30] + '...' if len(note["content"]) > 30 else note["content"],
+            'date': new_note_from_entry.updated_at,
+            'content': new_note_from_entry.content,
+            'formattedDate': format_date(new_note_from_entry.updated_at),
+            '_id': str(new_note_from_entry.pk)
+        }
     try:
-        ObjectId(id)
+        formatted_note = format_response_new_note(note)
+        message = 'Success'
+        data = {
+            'note': formatted_note,
+            'message': message,
+        }
+    except Exception:
+        message = 'Error formatting new note'
+        data = {
+         'message': message
+        }
+
+    response_ = data
+
+    return response_
+
+
+def is_valid_object_id(_id):
+    try:
+        ObjectId(_id)
         return True
     except InvalidId:
         return False

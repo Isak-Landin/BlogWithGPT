@@ -1,14 +1,15 @@
+import {renderEntry} from './renderEntry.js';
+
 /*
 {
         '_id': note_mongo_id,
         'entry__content': entry__content,
         'content': entry__content_text,
-        'entry': entry,
-        '_id': note_mongo_id,
+        'entry': entry
      }
 */
 
-const note_being_edited = []
+var note_being_edited = []
 
 
 var test_token = null;
@@ -23,12 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
 )
 
 export function start_edit_mode(event) {
+    console.log(event.srcElement);
     if (note_being_edited.length !== 0){
-        document.alert('You cannot edit more than one note at a time!');
+        alert('You cannot edit more than one note at a time!');
         return;
     }
 
     event.preventDefault();
+    event.stopImmediatePropagation();
 
     var edit_link = event.currentTarget;
     var entry = edit_link.parentElement.parentElement;
@@ -41,28 +44,23 @@ export function start_edit_mode(event) {
         '_id': note_mongo_id,
         'entry__content': entry__content,
         'content': entry__content_text,
-        'entry': entry,
-        '_id': note_mongo_id,
+        'entry': entry
      };
     note_being_edited.push(note_data);
-    render_edit_mode(event);
+    render_edit_mode();
 }
 
-function render_edit_mode(event) {
+function render_edit_mode() {
+    event.preventDefault();
     if (note_being_edited.length === 0){
         document.alert('You must start editing a note first!');
         return;
     }
 
-    const entry = note_being_edited[0].entry;
-    const entry__content = entry.querySelector('.entry__content');
-    if (entry__content === undefined || entry__content === null) {
-        entry__content = note_being_edited[0].entry__content;
-    }
-
     fetch('/generate-csrf-token')
         .then(response => response.json())
         .then(data => {
+            console.log('Is this printed twice?');
             if (data.csrf_token === null){
                 document.alert('Error: Could not generate CSRF token!');
                 return;
@@ -82,33 +80,38 @@ function render_edit_mode(event) {
 
             form.appendChild(textarea);
 
-            entry.replaceChild(form, entry__content);
+            console.log(note_being_edited[0].entry);
+            console.log(note_being_edited[0].entry__content);
 
-            var edit_link = entry.querySelector('.entry__footer-edit');
-            var delete_link = entry.querySelector('.entry__footer-remove');
+            note_being_edited[0].entry.replaceChild(form, note_being_edited[0].entry__content);
+
+            var edit_link = note_being_edited[0].entry.querySelector('.entry__footer-edit');
+            var delete_link = note_being_edited[0].entry.querySelector('.entry__footer-remove');
 
             var save_button = document.createElement('button');
             save_button.id = 'entry__footer-save-button';
             save_button.className = 'entry__footer-button';
             save_button.role = 'button';
             save_button.textContent = 'Save';
-            save_button.addEventListener('click', (event) => save_edit_mode(event, entry));
+            save_button.addEventListener('click', save_edit_mode);
 
             var cancel_button = document.createElement('button');
             cancel_button.id = 'entry__footer-cancel-button';
             cancel_button.className = 'entry__footer-button';
             cancel_button.role = 'button';
             cancel_button.textContent = 'Cancel';
-            cancel_button.addEventListener('click', (event) => cancel_edit_mode(event, entry));
+            cancel_button.addEventListener('click', cancel_edit_mode);
 
-            var entry__footer = entry.querySelector('.entry__footer');
+            var entry__footer = note_being_edited[0].entry.querySelector('.entry__footer');
             entry__footer.replaceChild(save_button, delete_link);
             entry__footer.replaceChild(cancel_button, edit_link);
-        })
+        });
+        /*
         .catch(error => {
             console.error('Error:', error);
             exit_edit_mode();
         });
+        */
 
 }
 
@@ -121,10 +124,6 @@ function save_edit_mode(event) {
     var id_of_edited_note = entry.getAttribute('id'); // Get the id of the note that was edited
     var id_of_note_being_edited = note_being_edited[0]['_id'];
 
-    console.log(note_being_edited);
-    console.log(id_of_edited_note);
-    console.log(id_of_note_being_edited);
-
     if (id_of_edited_note!== id_of_note_being_edited){
         alert('Internal error: The id of the edited note does not match the id of the note being edited!');
         return;
@@ -133,7 +132,7 @@ function save_edit_mode(event) {
     var textarea = document.getElementById('entry__content-edit-mode');
     var content = textarea.value.trim();
     if (content.length === 0){
-        document.alert('You cannot save an empty note!');
+        alert('You cannot save an empty note!');
         return;
     }
     var url = '/edit/edit/' + id_of_edited_note;
@@ -163,9 +162,11 @@ function save_edit_mode(event) {
         cancel_or_save = 'cancel';
         console.error('Error:', error);
         document.alert('Internal error: Could not save the edited note!: ' + error);
+    })
+    .finally(() => {
+        exit_edit_mode(event, cancel_or_save);
     });
 
-    exit_edit_mode(event, cancel_or_save);
 }
 
 function cancel_edit_mode(event) {
@@ -175,22 +176,48 @@ function cancel_edit_mode(event) {
 }
 
 function exit_edit_mode(event, save_or_cancel = 'cancel') {
+    var is_saved = false;
     if (note_being_edited.length === 0){
         document.alert('Something went wrong! Please refresh the page and try again!');
         return;
     }
 
     if (save_or_cancel === 'save') {
-        url = '/edit/' + note_being_edited[0]._id;
+        is_saved = true;
+        const url = '/edit/' + note_being_edited[0]._id;
         fetch(url)
         .then(response => response.json())
         .then(data => {
-            const new_article = renderEntry(data);
-            const searchResults = document.querySelector('.searchResults');
+            const message_container = document.createElement('div');
+            const message_container_text = document.createElement('p');
+            if (data.message === 'Success'){
+                message_container.className = 'alert alert-success';
+                message_container_text.textContent = 'We successfully saved the edited note!';
+            } else {
+                message_container.className = 'alert alert-danger';
+                message_container.textContent = 'Something went wrong! Please refresh the page';
+            }
+
+
+            const new_article = renderEntry(data.note);
+            const searchResults = document.querySelector('#searchResults');
+
+            message_container.appendChild(message_container_text);
+            new_article.appendChild(message_container);
+
             searchResults.replaceChild(new_article, note_being_edited[0].entry);
+
+            setTimeout(() => {
+                new_article.removeChild(message_container);
+            }, 5000);
+
         })
         .catch(error => {
+            is_saved = false;
             console.log(error);
+        })
+        .finally(() => {
+            note_being_edited = []
         });
     }
 
