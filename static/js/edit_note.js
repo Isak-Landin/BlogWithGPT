@@ -1,4 +1,7 @@
-import {renderEntry} from './renderEntry.js';
+import {renderEntry} from './render.js';
+import {renderProgressCircle} from './render.js';
+import {removeElement} from './render.js';
+import {renderEntryMessage} from './render.js';
 
 /*
 {
@@ -24,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
 )
 
 export function start_edit_mode(event) {
-    console.log(event.srcElement);
     if (note_being_edited.length !== 0){
         alert('You cannot edit more than one note at a time!');
         return;
@@ -56,6 +58,8 @@ function render_edit_mode() {
         document.alert('You must start editing a note first!');
         return;
     }
+    console.log('Inserting Loading Circle');
+    const loading_container = renderProgressCircle(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('.entry__footer-remove'));
 
     fetch('/generate-csrf-token')
         .then(response => response.json())
@@ -80,9 +84,6 @@ function render_edit_mode() {
 
             form.appendChild(textarea);
 
-            console.log(note_being_edited[0].entry);
-            console.log(note_being_edited[0].entry__content);
-
             note_being_edited[0].entry.replaceChild(form, note_being_edited[0].entry__content);
 
             var edit_link = note_being_edited[0].entry.querySelector('.entry__footer-edit');
@@ -105,13 +106,17 @@ function render_edit_mode() {
             var entry__footer = note_being_edited[0].entry.querySelector('.entry__footer');
             entry__footer.replaceChild(save_button, delete_link);
             entry__footer.replaceChild(cancel_button, edit_link);
-        });
+        })
         /*
         .catch(error => {
             console.error('Error:', error);
             exit_edit_mode();
         });
         */
+        .finally(() => {
+            removeElement(loading_container);
+        });
+
 
 }
 
@@ -139,6 +144,10 @@ function save_edit_mode(event) {
     const data = {
         'content': content,
     }
+
+    const loading_circle = renderProgressCircle(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('#entry__footer-save-button'));
+    console.log(loading_circle);
+
     fetch(url, {
         method: 'PUT',    // Specify the method
         headers: {
@@ -153,8 +162,10 @@ function save_edit_mode(event) {
             console.log(data.message);
         } else if (data.error){
             console.log(data.error);
+            cancel_or_save = 'cancel';
         }
         else {
+            cancel_or_save = 'cancel';
             console.log(data);
         }
     })
@@ -164,6 +175,7 @@ function save_edit_mode(event) {
         document.alert('Internal error: Could not save the edited note!: ' + error);
     })
     .finally(() => {
+        removeElement(loading_circle);
         exit_edit_mode(event, cancel_or_save);
     });
 
@@ -178,7 +190,7 @@ function cancel_edit_mode(event) {
 function exit_edit_mode(event, save_or_cancel = 'cancel') {
     var is_saved = false;
     if (note_being_edited.length === 0){
-        document.alert('Something went wrong! Please refresh the page and try again!');
+        alert('Something went wrong! Please refresh the page and try again!');
         return;
     }
 
@@ -188,28 +200,18 @@ function exit_edit_mode(event, save_or_cancel = 'cancel') {
         fetch(url)
         .then(response => response.json())
         .then(data => {
-            const message_container = document.createElement('div');
-            const message_container_text = document.createElement('p');
-            if (data.message === 'Success'){
-                message_container.className = 'alert alert-success';
-                message_container_text.textContent = 'We successfully saved the edited note!';
-            } else {
-                message_container.className = 'alert alert-danger';
-                message_container.textContent = 'Something went wrong! Please refresh the page';
-            }
-
+            const message_container = renderEntryMessage(data.message);
 
             const new_article = renderEntry(data.note);
-            const searchResults = document.querySelector('#searchResults');
-
-            message_container.appendChild(message_container_text);
             new_article.appendChild(message_container);
 
+            const searchResults = document.querySelector('#searchResults');
             searchResults.replaceChild(new_article, note_being_edited[0].entry);
+            note_being_edited.entry = new_article;
 
             setTimeout(() => {
                 new_article.removeChild(message_container);
-            }, 5000);
+            }, 10000);
 
         })
         .catch(error => {
@@ -219,6 +221,17 @@ function exit_edit_mode(event, save_or_cancel = 'cancel') {
         .finally(() => {
             note_being_edited = []
         });
+    } else {
+        if (note_being_edited[0].entry.querySelector('.alert-danger') !== null){
+            const message_containers = note_being_edited[0].entry.querySelectorAll('.alert-danger');
+
+            message_containers.forEach(message_container => {
+                note_being_edited[0].entry.removeChild(message_container);
+            });
+        }
+        const message_container = renderEntryMessage('Canceling edit...');
+        note_being_edited[0].entry.appendChild(message_container);
+
     }
 
 
