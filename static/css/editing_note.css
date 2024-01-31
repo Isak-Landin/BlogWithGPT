@@ -96,3 +96,56 @@
     color: #721c24;
 
 }
+
+
+/* Loading circle */
+/*
+    <div class="progress">
+        <div class="color"></div>
+    </div>
+*/
+
+.progress{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border: 5px solid #f3f3f3;
+    border-radius: 5%;
+
+    max-height: 35px;
+    max-width: 150px;
+
+    overflow: hidden;
+}
+.progress .color{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #3cd0ff;
+    width: 0px;
+    height: 100%;
+    border-radius: inherit;
+    animation: progress 3s infinite linear;
+}
+
+.progress .color .text {
+    margin: 0 0 0 0;
+    font-weight: bold;
+}
+@keyframes progress {
+    0%{
+      width: 0%;
+    }
+    25%{
+        width: 50%;
+    }
+    50%{
+        width: 75%;
+    }
+    75%{
+        width: 85%;
+    }
+    100%{
+        width: 100%;
+    }
+};
