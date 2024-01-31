@@ -1,3 +1,5 @@
+import time
+
 from flask import (
     request, redirect, url_for, jsonify, current_app,
     abort, Response, session
@@ -46,6 +48,7 @@ def add():
 @edit_bp.route("/delete/<mongo_id>", methods=['DELETE'])
 @login_required
 def delete(mongo_id):
+    time.sleep(1000)
     if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
         abort(404)
 
@@ -80,6 +83,13 @@ def edit(mongo_id):
     # Return a Response
     if not response:
         response = jsonify({'error': 'Note not found!'})
+
+    """ 
+   # testing error message on frontend:
+    response = {
+        'error': 'Error',
+    }
+    """
 
     return response
 
