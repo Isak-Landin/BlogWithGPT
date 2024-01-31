@@ -1,4 +1,4 @@
-import {renderEntry} from './renderEntry.js';
+import {renderEntry} from './render.js';
 
 
 document.addEventListener(
