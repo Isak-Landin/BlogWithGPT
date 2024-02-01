@@ -1,14 +1,17 @@
 import {renderEntry} from './render.js';
-import {renderProgressCircle} from './render.js';
+import {renderProgressBar} from './render.js';
+import {placeProgressBarBeforeElement} from './render.js';
 import {removeElement} from './render.js';
 import {renderEntryMessage} from './render.js';
+import {renderEntryPlaceholder} from './render.js';
 
 /*
-{
+    {
         '_id': note_mongo_id,
         'entry__content': entry__content,
         'content': entry__content_text,
-        'entry': entry
+        'entry': entry,
+        'entry_height': entry_height
      }
 */
 
@@ -46,7 +49,8 @@ export function start_edit_mode(event) {
         '_id': note_mongo_id,
         'entry__content': entry__content,
         'content': entry__content_text,
-        'entry': entry
+        'entry': entry,
+        'entry_height': entry.clientHeight,
      };
     note_being_edited.push(note_data);
     render_edit_mode();
@@ -58,15 +62,16 @@ function render_edit_mode() {
         document.alert('You must start editing a note first!');
         return;
     }
-    console.log('Inserting Loading Circle');
-    const loading_container = renderProgressCircle(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('.entry__footer-remove'));
-
+    console.log('Inserting progress bar');
+    const loading_container = placeProgressBarBeforeElement(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('.entry__footer-remove'));
+    console.log(loading_container);
+    console.log(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('.entry__footer-remove'));
     fetch('/generate-csrf-token')
         .then(response => response.json())
         .then(data => {
             console.log('Is this printed twice?');
             if (data.csrf_token === null){
-                document.alert('Error: Could not generate CSRF token!');
+                alert('Error: Could not generate CSRF token!');
                 return;
             }
             const form = document.createElement('form');
@@ -121,7 +126,7 @@ function render_edit_mode() {
 }
 
 function save_edit_mode(event) {
-    var cancel_or_save = 'save'
+    var error_or_save = 'save'
     event.preventDefault();
 
     const entry = note_being_edited[0].entry;
@@ -145,7 +150,7 @@ function save_edit_mode(event) {
         'content': content,
     }
 
-    const loading_circle = renderProgressCircle(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('#entry__footer-save-button'));
+    const loading_circle = placeProgressBarBeforeElement(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('#entry__footer-save-button'));
     console.log(loading_circle);
 
     fetch(url, {
@@ -162,39 +167,41 @@ function save_edit_mode(event) {
             console.log(data.message);
         } else if (data.error){
             console.log(data.error);
-            cancel_or_save = 'cancel';
+            error_or_save = 'error';
         }
         else {
-            cancel_or_save = 'cancel';
+            error_or_save = 'error';
             console.log(data);
         }
     })
     .catch(error => {
-        cancel_or_save = 'cancel';
+        error_or_save = 'error';
         console.error('Error:', error);
         document.alert('Internal error: Could not save the edited note!: ' + error);
     })
     .finally(() => {
         removeElement(loading_circle);
-        exit_edit_mode(event, cancel_or_save);
+        exit_edit_mode(event, error_or_save);
     });
 
 }
 
 function cancel_edit_mode(event) {
+    var error_or_cancel = 'cancel';
+
     event.preventDefault();
 
-    exit_edit_mode(event);
+    exit_edit_mode(event, error_or_cancel);
 }
 
-function exit_edit_mode(event, save_or_cancel = 'cancel') {
+function exit_edit_mode(event, save_error_cancel = 'cancel') {
     var is_saved = false;
     if (note_being_edited.length === 0){
         alert('Something went wrong! Please refresh the page and try again!');
         return;
     }
 
-    if (save_or_cancel === 'save') {
+    if (save_error_cancel === 'save') {
         is_saved = true;
         const url = '/edit/' + note_being_edited[0]._id;
         fetch(url)
@@ -221,18 +228,59 @@ function exit_edit_mode(event, save_or_cancel = 'cancel') {
         .finally(() => {
             note_being_edited = []
         });
-    } else {
-        if (note_being_edited[0].entry.querySelector('.alert-danger') !== null){
-            const message_containers = note_being_edited[0].entry.querySelectorAll('.alert-danger');
+    } else if (save_error_cancel === 'error') {
+        if (note_being_edited[0].entry.querySelector('.alert-danger') !== null || note_being_edited[0].entry.querySelector('.alert-success') !== null){
+            const error_message_containers = note_being_edited[0].entry.querySelectorAll('.alert-danger');
+            const success_message_containers = note_being_edited[0].entry.querySelectorAll('.alert-success')
 
-            message_containers.forEach(message_container => {
+            error_message_containers.forEach(message_container => {
+                note_being_edited[0].entry.removeChild(message_container);
+            });
+
+            success_message_containers.forEach(message_container => {
                 note_being_edited[0].entry.removeChild(message_container);
             });
         }
         const message_container = renderEntryMessage('Canceling edit...');
         note_being_edited[0].entry.appendChild(message_container);
 
+    } else if (save_error_cancel === 'cancel') {
+        const searchResults = document.querySelector('#searchResults');
+
+        const entry_placeholder = renderEntryPlaceholder(note_being_edited[0].entry_height);
+        const loading_element = renderProgressBar();
+
+        entry_placeholder.appendChild(loading_element);
+
+
+        searchResults.replaceChild(entry_placeholder, note_being_edited[0].entry);
+
+        const url = '/edit/' + note_being_edited[0]._id;
+        fetch(url, {
+            method: 'GET',    // Specify the method
+            headers: {
+                'Content-Type': 'application/json',  // Set content type to JSON
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.note) {
+                const article = renderEntry(data.note);
+                searchResults.replaceChild(article, entry_placeholder);
+
+                note_being_edited[0].entry = article;
+            } else {
+                if (data.error) {
+                    console.log('error: ' + data.error);
+                } else {
+                    console.log('Something went wrong and no error was returned from the server');
+                }
+                alert('Something went wrong, please refresh the page.')
+            }
+        });
     }
+
+
 
 
 
