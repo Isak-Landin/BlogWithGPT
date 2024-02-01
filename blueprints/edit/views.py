@@ -96,6 +96,7 @@ def edit(mongo_id):
 
 # Once a note is saved, we need to access the new note and present it's new values to the user
 @edit_bp.route('/<mongo_id>', methods=['GET'])
+@login_required
 def new_saved_note(mongo_id):
     _id = ObjectId(mongo_id)
     if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
