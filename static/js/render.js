@@ -1,4 +1,6 @@
 import {start_edit_mode} from '/static/js/edit_note.js';
+import {delete_note} from '/static/js/delete_note.js';
+
 
 export function renderEntry(entry) {
     const article = document.createElement('article');
@@ -48,8 +50,24 @@ export function renderEntry(entry) {
     return article;
 }
 
+export function renderEntryPlaceholder(entry_height) {
+    const article = document.createElement('article');
+    article.className = 'entry';
+    article.id = 'entry_placeholder';
 
-export function renderProgressCircle(element_to_be_placed_before) {
+    article.style.height = entry_height + 'px';
+
+    return article;
+}
+
+export function placeProgressBarBeforeElement(element_to_be_placed_before) {
+    const outerContainer = renderProgressBar();
+    const return_value = element_to_be_placed_before.insertAdjacentElement('beforebegin', outerContainer);
+
+    return outerContainer;
+}
+
+export function renderProgressBar() {
     const outerContainer = document.createElement('div');
     outerContainer.className = 'progress';
 
@@ -68,13 +86,11 @@ export function renderProgressCircle(element_to_be_placed_before) {
 
     loading_container.appendChild(loading_circle); */
 
-    const return_value = element_to_be_placed_before.insertAdjacentElement('beforebegin', outerContainer);
-    console.log(element_to_be_placed_before.parentNode);
-    console.log(return_value);
     return outerContainer;
 }
 
 export function removeElement(element_to_be_removed) {
+    console.log(element_to_be_removed);
     element_to_be_removed.parentNode.removeChild(element_to_be_removed);
 }
 
