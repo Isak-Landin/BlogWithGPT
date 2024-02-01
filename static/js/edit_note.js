@@ -62,14 +62,17 @@ function render_edit_mode() {
         document.alert('You must start editing a note first!');
         return;
     }
-    console.log('Inserting progress bar');
-    const loading_container = placeProgressBarBeforeElement(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('.entry__footer-remove'));
-    console.log(loading_container);
-    console.log(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('.entry__footer-remove'));
+
+    const entry_placeholder = renderEntryPlaceholder(note_being_edited[0].entry.clientHeight);
+    const loading_container = renderProgressBar();
+    entry_placeholder.appendChild(loading_container);
+
+    const searchResults = document.getElementById('searchResults');
+    searchResults.replaceChild(entry_placeholder, note_being_edited[0].entry);
+
     fetch('/generate-csrf-token')
         .then(response => response.json())
         .then(data => {
-            console.log('Is this printed twice?');
             if (data.csrf_token === null){
                 alert('Error: Could not generate CSRF token!');
                 return;
@@ -120,6 +123,8 @@ function render_edit_mode() {
         */
         .finally(() => {
             removeElement(loading_container);
+
+            searchResults.replaceChild(note_being_edited[0].entry, entry_placeholder);
         });
 
 
@@ -149,9 +154,9 @@ function save_edit_mode(event) {
     const data = {
         'content': content,
     }
-
-    const loading_circle = placeProgressBarBeforeElement(note_being_edited[0].entry.querySelector('.entry__footer').querySelector('#entry__footer-save-button'));
-    console.log(loading_circle);
+    const searchResults = document.getElementById('searchResults');
+    const loading_circle = renderProgressBar();
+    searchResults.appendChild(loading_circle);
 
     fetch(url, {
         method: 'PUT',    // Specify the method
@@ -202,6 +207,15 @@ function exit_edit_mode(event, save_error_cancel = 'cancel') {
     }
 
     if (save_error_cancel === 'save') {
+        const searchResults = document.querySelector('#searchResults');
+
+        const entry_placeholder = renderEntryPlaceholder(note_being_edited[0].entry_height);
+        const loading_element = renderProgressBar();
+        entry_placeholder.appendChild(loading_element);
+
+        searchResults.replaceChild(entry_placeholder, note_being_edited[0].entry);
+
+
         is_saved = true;
         const url = '/edit/' + note_being_edited[0]._id;
         fetch(url)
@@ -213,8 +227,8 @@ function exit_edit_mode(event, save_error_cancel = 'cancel') {
             new_article.appendChild(message_container);
 
             const searchResults = document.querySelector('#searchResults');
-            searchResults.replaceChild(new_article, note_being_edited[0].entry);
-            note_being_edited.entry = new_article;
+            searchResults.replaceChild(new_article, entry_placeholder);
+            note_being_edited[0].entry = new_article;
 
             setTimeout(() => {
                 new_article.removeChild(message_container);
