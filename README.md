@@ -24,7 +24,7 @@ In later versions it will aim to work as an assistant for your daily life and/or
 
 2. **Search Functionality**: The application provides a robust search functionality, allowing users to quickly find relevant notes.
 
-3. **Discussion Threads**: Users can select multiple notes and create discussion threads around them by posing questions.
+3. **AI Threads**: Users can select multiple notes and create GPT threads around them by posing questions.
 
 4. **GPT Integration**: The platform integrates with ChatGPT's API to analyze the contents of notes in the context of user questions.
 
