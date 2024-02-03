@@ -75,7 +75,7 @@ export function confirm_delete(event) {
     })
     .finally(() => {
         if (document.querySelector('#modalBackdrop')!= null || document.querySelector('.modal-backdrop') != null) {
-            removeElement(document.querySelector('#modalBackdrop'));
+            removeElement(document.querySelector('.modal-backdrop'));
         }
         removeElement(loading_container);
         entry_placeholder.appendChild(renderEntryMessage(is_deleted));
@@ -87,5 +87,9 @@ export function confirm_delete(event) {
 
 export function cancel_delete(event) {
     event.preventDefault();
+    var all_existing_modal_backdrops = document.querySelectorAll('.modal-backdrop');
+    all_existing_modal_backdrops.forEach(modal_backdrop => {
+        removeElement(modal_backdrop);
+    });
 }
 
