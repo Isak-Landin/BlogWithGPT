@@ -14,13 +14,15 @@ def format_results(entries):
        - content: The content of the entry.
        - formattedDate: The formatted date of the entry.
     """
+    print('################')
+    print(entries)
     formatted_results = [
         {
-            'title': entry["content"][:30] + '...' if len(entry["content"]) > 30 else entry["content"],
-            'date': entry["updated_at"],
-            'content': entry["content"],
-            'formattedDate': format_date(entry["updated_at"]),
-            '_id': str(entry["_id"])
+            'title': entry.content[:30] + '...' if len(entry["content"]) > 30 else entry["content"],
+            'date': entry.updated_at,
+            'content': entry.content,
+            'formattedDate': format_date(entry.updated_at),
+            '_id': str(entry.pk)
         }
         for entry in entries
     ]
