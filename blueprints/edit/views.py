@@ -45,14 +45,6 @@ def add():
     return redirect(url_for('home.home'))
 
 
-@edit_bp.route("/delete/<mongo_id>", methods=['DELETE'])
-@login_required
-def delete(mongo_id):
-    time.sleep(1000)
-    if not is_valid_object_id(mongo_id) or not does_entry_exist(mongo_id):
-        abort(404)
-
-
 @edit_bp.route('/edit/<mongo_id>', methods=['PUT'])
 @login_required
 def edit(mongo_id):
