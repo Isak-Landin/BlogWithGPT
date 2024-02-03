@@ -25,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         all_edit_links.forEach(edit_link => {
             edit_link.addEventListener('click', start_edit_mode)
-        })
+        });
     }
-)
+);
 
 export function start_edit_mode(event) {
     if (note_being_edited.length !== 0){
@@ -155,8 +155,13 @@ function save_edit_mode(event) {
         'content': content,
     }
     const searchResults = document.getElementById('searchResults');
-    const loading_circle = renderProgressBar();
-    searchResults.appendChild(loading_circle);
+
+    const entry_placeholder = renderEntryPlaceholder();
+    const loading_container = renderProgressBar();
+
+    entry_placeholder.appendChild(loading_container);
+
+    searchResults.appendChild(entry_placeholder);
 
     fetch(url, {
         method: 'PUT',    // Specify the method
@@ -185,7 +190,7 @@ function save_edit_mode(event) {
         document.alert('Internal error: Could not save the edited note!: ' + error);
     })
     .finally(() => {
-        removeElement(loading_circle);
+        removeElement(loading_container);
         exit_edit_mode(event, error_or_save);
     });
 
