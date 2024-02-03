@@ -20,18 +20,22 @@
 
     background-color: white;
     border: solid 2px #bababa;
-    padding: 20px;
+    padding: 10px;
     border-radius: 5px;
     /* Additional styling */
 }
 
 .modal-content__header {
     width: 100%;
+    border-bottom: solid 2px #bababa;
+    padding-bottom: 10px;
 }
 
 .modal-content__header-exit {
     text-decoration: none;
-    color: red;
+    color: grey;
+    font-weight: bold;
+    font-size: 20px;
 }
 
 .modal-content__main {
@@ -71,9 +75,9 @@
 }
 
 .modal-content__footer .btn-danger {
-    background-color: #db9fa8;
-    border-color: #b63e51;     /* Slightly darker red */
-    color: #000;
+    background-color: #A40E26;
+    border-color: #A40E26;     /* Slightly darker red */
+    color: #fffff1;
 }
 
 .modal-content__footer .btn-danger:hover {
