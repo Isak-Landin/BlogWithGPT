@@ -116,6 +116,12 @@ export function renderDeleteModal() {
     const modalBackdrop = document.createElement('div');
     modalBackdrop.className ='modal-backdrop';
     modalBackdrop.id ='modalBackdrop';
+    modalBackdrop.addEventListener('click', function(event) {
+        if (event.target === this){
+            cancel_delete(event);
+        }
+
+    })
 
     const modalContent = document.createElement('div');
     modalContent.className ='modal-content';
@@ -141,6 +147,7 @@ export function renderDeleteModal() {
     modalExitLink.href = '#';
     modalExitLink.className ='modal-content__header-exit';
     modalExitLink.textContent = '✕';
+    modalExitLink.addEventListener('click', cancel_delete);
     modalHeader.appendChild(modalExitLink);
 
     const modalText = document.createElement('p');
