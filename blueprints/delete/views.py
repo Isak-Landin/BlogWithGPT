@@ -11,11 +11,11 @@ from . import delete_bp
 
 @delete_bp.route('/delete/<mongo_id>', methods=['DELETE',])
 @login_required
-def delete(delete_id):
+def delete(mongo_id):
     if request.method != 'DELETE':
         abort(404)
 
-    mongo_id = ObjectId(delete_id)
+    mongo_id = ObjectId(mongo_id)
     note = Note.objects(pk=mongo_id, is_deleted=False, user_id=str(current_user.pk)).first()
     if note:
         note.modify(deleted_at=datetime.datetime.now(), is_deleted=True)
