@@ -9,6 +9,7 @@ from flask_mongoengine import MongoEngine
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_login import LoginManager, login_required, current_user
 from bson.objectid import ObjectId
+from urllib.parse import quote_plus
 
 from blueprints.home import home_bp
 from blueprints.search import search_bp
@@ -37,9 +38,16 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['WTF_CSRF_SECRET_KEY'] = os.getenv('WTF_CSRF_SECRET_KEY')
 
+    username = quote_plus(os.getenv("MONGODB_USERNAME"))
+    password = quote_plus(os.getenv('MONGODB_PASSWORD'))  # Correctly encodes the %%
+    mongodb_host = os.getenv("MONGODB_HOST")
+    db_name = os.getenv('DB_NAME')
+
+    mongodb_uri = f'mongodb+srv://{username}:{password}@{mongodb_host}/{db_name}?retryWrites=true&w=majority'
+
     app.config['MONGODB_SETTINGS'] = {
-        'host': os.getenv("MONGODB_URI"),
-        'db': 'microblog'  # os.getenv("MONGODB_DATABASE"),
+        'host': mongodb_uri,
+        'db': os.getenv('DB_NAME'),
     }
 
     # create login manager
@@ -51,7 +59,7 @@ def create_app():
     app.login_manager = login_manager
 
     # Create a new client and connect to the server
-    client: MongoClient = MongoClient(os.getenv("MONGODB_URI"))
+    client: MongoClient = MongoClient(mongodb_uri)
     client_mongo_engine = MongoEngine(app)
 
     # make the mongoDB client our db for the app

@@ -299,7 +299,7 @@ function exit_edit_mode(event, save_error_cancel = 'cancel') {
         });
     }
 
-
+    note_being_edited = []
 
 
 
