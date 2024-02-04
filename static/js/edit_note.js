@@ -222,7 +222,7 @@ function exit_edit_mode(event, save_error_cancel = 'cancel') {
 
 
         is_saved = true;
-        const url = '/edit/' + note_being_edited[0]._id;
+        const url = '/load-note/' + note_being_edited[0]._id;
         fetch(url)
         .then(response => response.json())
         .then(data => {
