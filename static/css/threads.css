@@ -1,0 +1,10 @@
+.create-thread {
+    display: flex;
+    flex-direction: row;
+    background-color: blue;
+}
+
+.create-thread__left {
+    display: flex;
+    flex-direction: row;
+}

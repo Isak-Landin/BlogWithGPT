@@ -16,6 +16,7 @@ from blueprints.search import search_bp
 from blueprints.edit import edit_bp
 from blueprints.auth import auth_bp
 from blueprints.delete import delete_bp
+from blueprints.threads import threads_bp
 
 from models.user import User
 
@@ -34,6 +35,8 @@ def create_app():
     app.register_blueprint(edit_bp, url_prefix='/edit')
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(delete_bp, url_prefix='/delete')
+    app.register_blueprint(threads_bp, url_prefix='/threads')
+
 
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['WTF_CSRF_SECRET_KEY'] = os.getenv('WTF_CSRF_SECRET_KEY')

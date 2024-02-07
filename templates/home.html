@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microblog</title>
 
     <script type="module" src="{{url_for('static', filename='/js/search_entries.js')}}"></script>
@@ -18,18 +18,20 @@
                 <img class="navbar__logo" src="/static/logo.svg" alt="The Microblog logo"/> NoteAI
             </div>
             <ul class="navbar__navigation">
-                <li class="navbar__navigation-item"><a href="#" class="navbar__link">Recent</a></li>
-                <li class="navbar__navigation-item"><a href="#" class="navbar__link">Calender</a></li>
+                <li class="navbar__navigation-item"><a href="{{ url_for('home.home')}}" class="navbar__link">Notes</a></li>
+                <li class="navbar__navigation-item"><a href="{{ url_for('threads.threads') }}" class="navbar__link">Threads</a></li>
             </ul>
     </header>
 
     <main class="main">
         <section>
+            <h1 class="main__title">
             {% if current_user.is_authenticated %}
-                <h1>Add new entry {{ current_user.username }}</h1>
+                Add new entry {{ current_user.username }}
             {% else %}
-                <h1>Add new entry</h1>
+                Add new entry
             {% endif %}
+            </h1>
 
             <form class="form" method="POST" action="{{ url_for('edit.add') }}">
                 {{ form.hidden_tag() }}
