@@ -22,21 +22,20 @@
 
     <main class="main">
         <section>
-            {% if current_user.is_authenticated %}
-                <h1>Time to create a new Thread {{ current_user.username }}?</h1>
-            {% else %}
-                <h1>Create a new Thread!</h1>
-            {% endif %}
+            <div class="quote">
+                <p class="quote__content">{{ quote.content }}</p>
+                <p class="quote__author">-{{ quote.author }}</p>
+            </div>
+        </section>
 
+        <section>
             <article class="create-thread">
                 <div class="create-thread__left">
-                    <img src="{{ url_for('static', filename='/logo.svg')}}" class="create-thread__icon">
+                    <img src="{{ url_for('static', filename='/text-bubbles.png.png')}}" class="create-thread__icon">
                     <p class="create-thread__text">✕</p>
                 </div>
                 <div class="create-thread__right">
-                    <div class="create-thread__divider">
-
-                    </div>
+                    <div class="create-thread__divider"></div>
 
                     <div class="create-thread__content">
                         <p class="create-thread__content-text">
@@ -45,9 +44,8 @@
                     </div>
                 </div>
             </article>
-        </section>
-        <section>
-            <h1>Your Threads</h1>
+
+            <h1 class="user-threads-title">Your Threads</h1>
 
             {% for thread in threads %}
             <div class="thread">

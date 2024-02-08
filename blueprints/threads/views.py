@@ -2,6 +2,7 @@ from flask import (
     Flask, render_template, request,
     redirect, url_for, flash, abort,
 )
+import requests
 
 from flask_login import login_required, current_user
 from . import threads_bp
@@ -19,8 +20,23 @@ def threads():
         loaded_threads = Thread.objects(owner_id=current_user).order_by('-updated_at')
         return loaded_threads
 
+    api_url = 'https://api.quotable.io/quotes/random'
+    response = requests.get(api_url)
+    if response.status_code == requests.codes.ok:
+        response = response.json()
+
+        quote = {
+            'content': response[0]['content'],
+            'author': response[0]['author'],
+        }
+    else:
+        quote = {
+            'content': "I do not dispute with the world; rather it is the world that disputes with me.",
+            'author': "The Buddha",
+        }
+
     user_threads = load_threads()
-    return render_template('threads.html', threads=user_threads)
+    return render_template('threads.html', threads=user_threads, quote=quote)
 
 
 @threads_bp.route('/<thread_id>', methods=['GET',])
