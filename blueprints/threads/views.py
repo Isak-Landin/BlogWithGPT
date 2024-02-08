@@ -63,3 +63,5 @@ def new_thread():
         new_thread.save()
         return redirect(url_for('threads.threads'))
 
+    return render_template('new_thread.html', form=form)
+

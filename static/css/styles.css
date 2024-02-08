@@ -17,6 +17,8 @@ body {
     min-height: 100vh;
 }
 
+
+/*
 .navbar {
     max-width: 640px;
     margin: 50px auto;
@@ -56,6 +58,7 @@ body {
     text-decoration: none;
     color: inherit;
 }
+*/
 
 .main {
     min-width: 450px;
