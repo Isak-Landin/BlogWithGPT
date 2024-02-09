@@ -1,9 +1,4 @@
 <header class="navbar">
-    <div class="navbar__brand">
-        <div class="navbar__logo">
-            <img src="" alt="The Microblog logo"/>
-        </div>
-    </div>
     <nav class="navbar__main">
         <div class="navbar__content">
             <div class="navbar__content-circle">
@@ -17,6 +12,11 @@
             </div>
             <a href="{{ url_for('threads.threads') }}" class="navbar__content-link">Threads</a>
         </div>
+
+        <div class="navbar__brand">
+                <img class="navbar__logo" src="{{ url_for('static', filename='/logo.png') }}" alt="The Microblog logo"/>
+        </div>
+
         <div class="navbar__content">
             <div class="navbar__content-circle">
                 <img class="navbar__icon" src="" alt="">
@@ -30,9 +30,8 @@
             <a href="#" class="navbar__content-link">Support</a>
         </div>
     </nav>
-
     <nav class="navbar__footer">
         <!-- implement slider for theme here -->
-        {% include '/components/logout-icon.html' %}
+        <button class="navbar__logout">Logout</button>
     </nav>
 </header>
