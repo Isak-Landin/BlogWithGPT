@@ -14,7 +14,15 @@
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
 
+    box-shadow: 5px 5px 5px rgba(192, 192, 192, 0.9);
+
     overflow: hidden;
+}
+
+.navbar__header {
+    width: 100%;
+    min-height: 20px;
+    background-color: #EBF7FF;
 }
 
 .navbar__main {
@@ -30,15 +38,22 @@
 
 .navbar__brand {
     display: flex;
+    flex-direction: column;
     align-items: center;
 }
 
 .navbar__logo {
-    margin-right: 30px;
     height: auto;
     max-width: 100px;
+    border: 2px solid white;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    animation: glow 2s infinite alternate;
+}
 
-
+.navbar__logo-text {
+    padding: 0;
+    margin: 0;
 }
 
 .navbar__content {
@@ -49,16 +64,31 @@
 }
 
 .navbar__content-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: rgb(255,255,255);
-    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,239,224,1) 45%, rgba(241,208,179,1) 100%);
-    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(235,245,255,1) 0%, rgba(215,235,255,1) 50%, rgba(175,228,255,1) 100%);
+    /* background: linear-gradient(180deg, rgba(4,57,171,1) 0%, rgba(123,245,252,1) 45%, rgba(255,255,255,1) 100%); */
 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+    border-radius: 20%;
+    border: 1px solid black;
 
-    min-width: 60px;
-    min-height: 60px;
+    min-width: 70px;
+    min-height: 70px;
+    max-width: 70px;
+    max-height: 70px;
+}
+
+.navbar__icon {
+    max-width: 50px;
+    height: auto;
+    padding: 0 3px 0 3px;
 }
 
 .navbar__content-link {
+    display: none;
     text-decoration: none;
     color: black;
     font-size: 18px;
@@ -76,4 +106,10 @@
 
 .navbar__footer-logout {
     margin-right: 4rem;
+}
+
+
+@keyframes glow {
+    from { box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2); }
+    to { box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); }
 }

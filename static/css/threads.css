@@ -1,13 +1,4 @@
-.main section {
-    padding: 2rem; /* Apply padding uniformly on all sides */
-    display: flex;
-    flex-direction: column;
 
-    background-color: #fff;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border-radius: 4px;
-}
 
 .quote {
     display: flex;

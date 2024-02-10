@@ -1,25 +1,27 @@
 <header class="navbar">
+    <div class="navbar__header"></div>
     <nav class="navbar__main">
         <div class="navbar__content">
             <div class="navbar__content-circle">
-                <img class="navbar__icon" src="" alt="">
+                <img class="navbar__icon" src="{{ url_for('static', filename='note_icon.png') }}" alt="">
             </div>
             <a href="{{ url_for('home.home')}}" class="navbar__content-link">Notes</a>
         </div>
         <div class="navbar__content">
             <div class="navbar__content-circle">
-                <img class="navbar__icon" src="" alt="">
+                <img class="navbar__icon" src="{{ url_for('static', filename='threads_icon_2.png') }}" alt="">
             </div>
             <a href="{{ url_for('threads.threads') }}" class="navbar__content-link">Threads</a>
         </div>
 
         <div class="navbar__brand">
-                <img class="navbar__logo" src="{{ url_for('static', filename='/logo.png') }}" alt="The Microblog logo"/>
+                <img class="navbar__logo" src="{{ url_for('static', filename='/logo_black_bg.png') }}" alt="The Microblog logo"/>
+                <h2 class="navbar__logo-text"></h2>
         </div>
 
         <div class="navbar__content">
             <div class="navbar__content-circle">
-                <img class="navbar__icon" src="" alt="">
+                <img class="navbar__icon" src="{{ url_for('static', filename='user_icon.png') }}" alt="">
             </div>
             <a href="#" class="navbar__content-link">User</a>
         </div>

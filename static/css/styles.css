@@ -17,7 +17,17 @@ body {
     min-height: 100vh;
 }
 
+.displayed-section {
+    padding: 2rem; /* Apply padding uniformly on all sides */
+    display: flex;
+    flex-direction: column;
 
+    background-color: #fff;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-radius: 4px;
+}
 /*
 .navbar {
     max-width: 640px;

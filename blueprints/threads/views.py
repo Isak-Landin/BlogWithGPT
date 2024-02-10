@@ -20,7 +20,7 @@ def threads():
         loaded_threads = Thread.objects(owner_id=current_user).order_by('-updated_at')
         return loaded_threads
 
-    api_url = 'https://api.quotable.io/quotes/random'
+    api_url = 'http://api.quotable.io/quotes/random'
     response = requests.get(api_url)
     if response.status_code == requests.codes.ok:
         response = response.json()

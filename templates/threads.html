@@ -14,14 +14,14 @@
     {% include '/components/navigation-bar.html' %}
 
     <main class="main">
-        <section>
+        <section class="displayed-section">
             <div class="quote">
                 <p class="quote__content">{{ quote.content }}</p>
                 <p class="quote__author">-{{ quote.author }}</p>
             </div>
         </section>
 
-        <section>
+        <section class="displayed-section">
             <article class="create-thread">
                 <div class="create-thread__left">
                     <img src="{{ url_for('static', filename='/text-bubbles.png')}}" class="create-thread__icon">

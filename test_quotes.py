@@ -1,5 +1,5 @@
 import requests
-api_url = 'https://api.quotable.io/quotes/random'
+api_url = 'http://api.quotable.io/quotes/random'
 response = requests.get(api_url)
 if response.status_code == requests.codes.ok:
     print(response.text)
