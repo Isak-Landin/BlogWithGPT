@@ -14,14 +14,14 @@
     {% include '/components/navigation-bar.html' %}
 
     <main class="main">
-        <section class="displayed-section">
+        <section class="displayed-section-column">
             <div class="quote">
                 <p class="quote__content">{{ quote.content }}</p>
                 <p class="quote__author">-{{ quote.author }}</p>
             </div>
         </section>
 
-        <section class="displayed-section">
+        <section class="displayed-section-column">
             <article class="create-thread">
                 <div class="create-thread__left">
                     <img src="{{ url_for('static', filename='/text-bubbles.png')}}" class="create-thread__icon">
@@ -40,7 +40,7 @@
 
             <h1 class="user-threads-title">Your Threads</h1>
 
-            {% for thread in threads %}
+            <!--{% for thread in threads %}
             <div class="thread">
                 <div class="thread__header">
                     <h2 class="thread__title">{{ thread.title }}</h2>
@@ -50,7 +50,7 @@
                     <p>{{ thread.content }}</p>
                 </div>
             </div>
-            {% endfor %}
+            {% endfor %} -->
         </section>
     </main>
     <footer class="footer">
