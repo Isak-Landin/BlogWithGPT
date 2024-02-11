@@ -18,6 +18,8 @@ The Note Analysis and Discussion Platform is a web application that allows users
 
 In later versions it will aim to work as an assistant for your daily life and/or work-related workflow.
 
+[Workflow](https://trello.com/w/miniblogg/home)
+
 ## Features
 
 1. **Create, Edit, Delete Notes**: Users can create, edit, and delete notes, making it easy to capture and organize their thoughts.
