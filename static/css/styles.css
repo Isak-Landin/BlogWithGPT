@@ -17,16 +17,25 @@ body {
     min-height: 100vh;
 }
 
-.displayed-section {
+.displayed-section-column {
+    flex-direction: column;
+}
+
+.displayed-section-row {
+    flex-direction: row;
+}
+
+.displayed-section-row, .displayed-section-column {
     padding: 2rem; /* Apply padding uniformly on all sides */
     display: flex;
-    flex-direction: column;
 
     background-color: #fff;
     margin-top: 10px;
     margin-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 3px 7px 7px rgba(0,0,0,0.1);
     border-radius: 4px;
+    justify-content: center;
+    align-items: center;
 }
 /*
 .navbar {
@@ -72,11 +81,11 @@ body {
 
 .main {
     min-width: 450px;
-    max-width: 450px;
+    max-width: 850px;
     margin: 0 auto;
     padding: 0 20px;
-
     flex: 1;
+    width: 50%;
 }
 
 .main__title {
@@ -132,11 +141,21 @@ search input[type="search"] {
     font-size: 16px; /* Adjust as needed */
 }
 
+#searchResults {
+    max-width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+}
+
 .entry {
     background-color: #f7f7f7;
     padding: 10px;
-    margin-top:  50px;
-    border-radius: 15px
+    margin-top: 50px;
+    margin-left: 10px;
+    border-radius: 15px;
+
+    min-width: 390px;
+    max-width: 390px;
 }
 
 .entry__header {
@@ -147,20 +166,24 @@ search input[type="search"] {
     justify-content: space-between;
 }
 
-.entry__title {
-    font-size: 18px;
-}
-
 .entry__date {
     color: #5c6b70;
 }
 
+.entry__title {
+    font-size: 18px;
+}
+
 .entry__content {
+    min-height: 100px;
+    max-height: 100px;
+    overflow: hidden;
     font-size: 16px;
     line-height: 150%;
     overflow-wrap: break-word; /* This ensures that the words will break and wrap to the next line */
     /* word-break: break-word; */ /* Use this for more aggressive breaking */
     hyphens: auto; /* This attempts to hyphenate words at appropriate hyphenation points */
+
 }
 
 .entry__footer {
