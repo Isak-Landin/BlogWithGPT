@@ -2,6 +2,7 @@ import {start_edit_mode} from '/static/js/edit_note.js';
 import {render_delete} from '/static/js/delete_note.js';
 import {confirm_delete} from '/static/js/delete_note.js';
 import {cancel_delete} from '/static/js/delete_note.js';
+import {show_more} from '/static/js/show_more.js';
 
 export function renderEntry(entry) {
     const article = document.createElement('article');
@@ -48,6 +49,16 @@ export function renderEntry(entry) {
     article.appendChild(header);
     article.appendChild(content);
     article.appendChild(footer);
+
+    article.style.position = 'absolute';
+    article.style.top = '-9999px';
+    article.style.left = '-9999px';
+    article.style.visibility = 'hidden';
+
+    if (article.scrollHeight > article.clientHeight) {
+        const showMore = renderShowMore();
+        article.insertBefore(showMore, removeLink);
+    }
 
     return article;
 }
@@ -171,4 +182,29 @@ export function renderDeleteModal() {
     modalFooter.appendChild(cancel_button);
 
     return modalBackdrop;
+}
+
+
+export function renderShowMoreModal (event) {
+    const activated_entry = event.target.parentNode.parentNode;
+
+    const modalBackdrop = document.createElement('div');
+    modalBackdrop.className ='show-more__modal-backdrop';
+    modalBackdrop.id ='showMoreModalBackdrop';
+
+    const modalContent = document.createElement('div');
+    modalContent.className ='show-more__modal-content';
+    modalContent.id ='showMoreModalContent';
+    modalBackdrop.appendChild(modalContent);
+
+
+}
+
+// div class="plus"></div>
+export function renderShowMore () {
+    const showMore = document.createElement('div');
+    showMore.className ='plus';
+    showMore.addEventListener('click', show_more);
+
+    return showMore;
 }
