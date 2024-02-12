@@ -3,6 +3,7 @@ import {render_delete} from '/static/js/delete_note.js';
 import {confirm_delete} from '/static/js/delete_note.js';
 import {cancel_delete} from '/static/js/delete_note.js';
 import {show_more} from '/static/js/show_more.js';
+import {cancel_show_more} from '/static/js/show_more.js';
 
 export function renderEntry(entry) {
     const article = document.createElement('article');
@@ -192,20 +193,24 @@ export function renderDeleteModal() {
 
 
 export function renderShowMoreModal (event) {
-    const activated_entry = event.target.parentNode.parentNode;
-    const activated_entry_clone = activated_entry.cloneNode(true);
-
     const modalBackdrop = document.createElement('div');
     modalBackdrop.className ='show-more__modal-backdrop';
     modalBackdrop.id ='showMoreModalBackdrop';
 
+    document.addEventListener('keydown', handleEscapeKeyDown);
+    modalBackdrop.addEventListener('click', function(event) {
+        if (event.target === this){
+            cancel_show_more(event);
+        }
+    });
+
+
     const modalContent = document.createElement('div');
     modalContent.className ='show-more__modal-content';
     modalContent.id ='showMoreModalContent';
-    modalContent.appendChild(activated_entry_clone);
     modalBackdrop.appendChild(modalContent);
 
-
+    return modalBackdrop;
     // Todo edit the cloned entry in order for it to appear as preferred.
     //  This would include the class, id, clone.content.style.height, etc.
     // We might not want to remove any classes now that I think about it, since this
@@ -216,11 +221,31 @@ export function renderShowMoreModal (event) {
 
 }
 
+export function handleEscapeKeyDown(event) {
+    if (event.key === 'Escape') {
+        cancel_show_more(event);
+    }
+}
+
 // div class="plus"></div>
 export function renderShowMore () {
+    const testEffectOfOuterContainer = document.createElement('div');
+    testEffectOfOuterContainer.className ='plus__container';
+
+    const line_one = document.createElement('div');
+    line_one.className = 'line line_one';
+
+    testEffectOfOuterContainer.appendChild(line_one);
+
     const showMore = document.createElement('div');
     showMore.className ='plus';
     showMore.addEventListener('click', show_more);
+    testEffectOfOuterContainer.appendChild(showMore);
 
-    return showMore;
+    const line_two = document.createElement('div');
+    line_two.className = 'line line_two';
+    testEffectOfOuterContainer.appendChild(line_two);
+
+    // return showMore;
+    return testEffectOfOuterContainer;
 }
