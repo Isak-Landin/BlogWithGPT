@@ -1,7 +1,15 @@
+.plus__container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    cursor: pointer;
+}
+
 .plus {
     --t:2px;   /* Thickness */
-    --l:40px;  /* size of the symbol */
-    --s:10px;  /* space around the symbol */
+    --l:20px;  /* size of the symbol */
+    --s:5px;  /* space around the symbol */
     --c1:#fff; /* Plus color*/
     --c2:#000; /* background color*/
 
@@ -20,6 +28,13 @@
     border-radius:50%;
 }
 
+.line {
+  width: 20px; /* Line width */
+  height: 2px; /* Line thickness */
+  background-color: #000; /* Line color */
+  margin: 0 10px; /* Adjust spacing around the symbol */
+}
+
 .show-more__modal-backdrop {
     position: fixed;
     top: 0;
@@ -32,22 +47,7 @@
     align-items: center;
 }
 
-.show-more__modal-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    min-width: 200px;
-    min-height: 200px;
-
-    background-color: white;
-    border: solid 2px #bababa;
-    padding: 10px;
-    border-radius: 5px;
-    /* Additional styling */
-}
-
-.show-more__modal-content .entry {
+.show-more__modal-backdrop .entry .entry__content {
     height: auto;
     max-height: none;
     overflow: visible;
