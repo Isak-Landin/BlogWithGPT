@@ -1,3 +1,6 @@
+import {renderShowMoreModal} from '/static/js/render.js';
+
+
 document.addEventListener('DOMContentLoaded', () => {
         let all_show_mores = document.querySelectorAll('.entry__footer-show-more');
 
@@ -8,14 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
 );
 
 // <a href="#" class="entry__footer-show-more">Show more</a>
-function show_more(event) {
+export function show_more(event) {
     const target = event.target;
     const entry = target.parentNode.parentNode;
     const content = entry.querySelector('.entry__content');
-    content.style.height = 'auto';
 
-}
-
-function renderShowMore() {
+    const modal_backdrop = renderShowMoreModal();
 
 }
