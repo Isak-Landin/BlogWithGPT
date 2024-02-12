@@ -19,3 +19,37 @@
 
     border-radius:50%;
 }
+
+.show-more__modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* Dim or blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.show-more__modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    min-width: 200px;
+    min-height: 200px;
+
+    background-color: white;
+    border: solid 2px #bababa;
+    padding: 10px;
+    border-radius: 5px;
+    /* Additional styling */
+}
+
+.show-more__modal-content .entry {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    margin: 0 auto;
+}
