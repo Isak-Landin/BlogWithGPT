@@ -189,6 +189,7 @@ search input[type="search"] {
 .entry__footer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
 }
 
