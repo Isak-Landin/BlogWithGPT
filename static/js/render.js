@@ -53,12 +53,18 @@ export function renderEntry(entry) {
     article.style.position = 'absolute';
     article.style.top = '-9999px';
     article.style.left = '-9999px';
-    article.style.visibility = 'hidden';
 
-    if (article.scrollHeight > article.clientHeight) {
-        const showMore = renderShowMore();
-        article.insertBefore(showMore, removeLink);
+    document.body.appendChild(article);
+    if (content.scrollHeight > content.clientHeight) {
+        const showMoreDiv = renderShowMore();
+        footer.insertBefore(showMoreDiv, removeLink);
+        console.log('This is a confirmation that show more is needed');
     }
+
+    article.style.position = '';
+    article.style.top = '';
+    article.style.left = '';
+    document.body.removeChild(article);
 
     return article;
 }
@@ -187,6 +193,7 @@ export function renderDeleteModal() {
 
 export function renderShowMoreModal (event) {
     const activated_entry = event.target.parentNode.parentNode;
+    const activated_entry_clone = activated_entry.cloneNode(true);
 
     const modalBackdrop = document.createElement('div');
     modalBackdrop.className ='show-more__modal-backdrop';
@@ -195,7 +202,16 @@ export function renderShowMoreModal (event) {
     const modalContent = document.createElement('div');
     modalContent.className ='show-more__modal-content';
     modalContent.id ='showMoreModalContent';
+    modalContent.appendChild(activated_entry_clone);
     modalBackdrop.appendChild(modalContent);
+
+
+    // Todo edit the cloned entry in order for it to appear as preferred.
+    //  This would include the class, id, clone.content.style.height, etc.
+    // We might not want to remove any classes now that I think about it, since this
+    // would result in having to create the stylin for entries again.
+    // We would somehow without the use of id, have to establish a unique identifier for the cloned entry.
+    // This would enable unique designing for the cloned entry.
 
 
 }
