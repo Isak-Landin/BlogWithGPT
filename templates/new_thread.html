@@ -8,57 +8,13 @@
 
     <link rel="stylesheet" href="{{url_for('static', filename='/css/styles.css')}}" />
     <link rel="stylesheet" href="{{url_for('static', filename='/css/new_thread.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='/css/components/navigation-bar.css)}}">
 </head>
 <body>
-    <header class="navbar">
-            <div class="navbar__brand">
-                <img class="navbar__logo" src="/static/logo.svg" alt="The Microblog logo"/> NoteAI
-            </div>
-            <ul class="navbar__navigation">
-                <li class="navbar__navigation-item"><a href="{{ url_for('home.home')}}" class="navbar__link">Notes</a></li>
-                <li class="navbar__navigation-item"><a href="{{ url_for('threads.threads') }}" class="navbar__link">Threads</a></li>
-            </ul>
-    </header>
+    {% '/components/navigation-bar.html' %}
 
     <main class="main">
-        <section>
-            <div class="quote">
-                <p class="quote__content">{{ quote.content }}</p>
-                <p class="quote__author">-{{ quote.author }}</p>
-            </div>
-        </section>
 
-        <section>
-            <article class="create-thread">
-                <div class="create-thread__left">
-                    <img src="{{ url_for('static', filename='/text-bubbles.png')}}" class="create-thread__icon">
-                    <p class="create-thread__text">✕</p>
-                </div>
-                <div class="create-thread__right">
-                    <div class="create-thread__divider"></div>
-
-                    <div class="create-thread__content">
-                        <p class="create-thread__content-text">
-                            Create New Thread <span class="create-thread__content-text-check">✔</span>
-                        </p>
-                    </div>
-                </div>
-            </article>
-
-            <h1 class="user-threads-title">Your Threads</h1>
-
-            {% for thread in threads %}
-            <div class="thread">
-                <div class="thread__header">
-                    <h2 class="thread__title">{{ thread.title }}</h2>
-                    <p class="thread__description">{{ thread.description }}</p>
-                </div>
-                <div class="thread__content">
-                    <p>{{ thread.content }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </section>
     </main>
     <footer class="footer">
         <div class="footer__content">
