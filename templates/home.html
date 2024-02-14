@@ -5,20 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microblog</title>
 
-    <script type="module" src="{{url_for('static', filename='/js/search_entries.js')}}"></script>
-    <script type="module" src="{{url_for('static', filename='/js/edit_note.js')}}"></script>
+    <script type="module" src="{{url_for('static', filename='js/search_entries.js')}}"></script>
+    <script type="module" src="{{url_for('static', filename='js/edit_note.js')}}"></script>
     <script type="module" src="{{url_for('static', filename='js/render.js/')}}"></script>
-    <link rel="stylesheet" href="{{url_for('static', filename='/css/styles.css')}}" />
-    <link rel="stylesheet" href="{{url_for('static', filename='/css/editing_note.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='/css/deleting_note.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='/css/components/navigation-bar.css')}}" />
-    <link rel="stylesheet" href="{{url_for('static', filename='/css/components/show_more.css')}}"/>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/editing_note.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/deleting_note.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/components/navigation-bar.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/components/show_more.css')}}"/>
 </head>
 <body>
     {% include '/components/navigation-bar.html' %}
 
     <main class="main">
-        <section>
+        <section class="dropdown-container">
             <h1 class="main__title">
             {% if current_user.is_authenticated %}
                 Add new entry {{ current_user.username }}
