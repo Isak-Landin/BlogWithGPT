@@ -6,9 +6,9 @@
     <title>Microblog</title>
 
 
-    <link rel="stylesheet" href="{{url_for('static', filename='/css/styles.css')}}" />
-    <link rel="stylesheet" href="{{url_for('static', filename='/css/threads.css')}}" />
-    <link rel="stylesheet" href="{{url_for('static', filename='/css/components/navigation-bar.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/threads.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/components/navigation-bar.css')}}" />
 </head>
 <body>
     {% include '/components/navigation-bar.html' %}
@@ -24,7 +24,7 @@
         <section class="displayed-section-column">
             <article class="create-thread">
                 <div class="create-thread__left">
-                    <img src="{{ url_for('static', filename='/text-bubbles.png')}}" class="create-thread__icon">
+                    <img src="{{ url_for('static', filename='text-bubbles.png')}}" class="create-thread__icon">
                     <p class="create-thread__text">✕</p>
                 </div>
                 <div class="create-thread__right">
