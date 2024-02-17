@@ -8,6 +8,7 @@
     <script type="module" src="{{url_for('static', filename='js/search_entries.js')}}"></script>
     <script type="module" src="{{url_for('static', filename='js/edit_note.js')}}"></script>
     <script type="module" src="{{url_for('static', filename='js/render.js/')}}"></script>
+    <script type="module" src="{{url_for('static', filename='js/sections.js')}}"></script>
     <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}" />
     <link rel="stylesheet" href="{{url_for('static', filename='css/editing_note.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/deleting_note.css')}}">
@@ -18,10 +19,10 @@
     {% include '/components/navigation-bar.html' %}
 
     <main class="main">
-        <section class="dropdown-container">
+        <section>
             <h1 class="main__title">
             {% if current_user.is_authenticated %}
-                Add new entry {{ current_user.username }}
+                Add new entry <a href="#">{{ current_user.username }}</a>
             {% else %}
                 Add new entry
             {% endif %}

@@ -1,43 +1,22 @@
-<header class="navbar">
-    <div class="navbar__header"></div>
-    <nav class="navbar__main">
-        <div class="navbar__content">
-            <a href="{{ url_for('home.home')}}">
-                <div class="navbar__content-circle">
-                    <img class="navbar__icon" src="{{ url_for('static', filename='note_icon.png') }}" alt="">
-                </div>
-            </a>
+<nav>
+  <div class="navbar">
+    <div class="container nav-container">
+        <input class="checkbox" type="checkbox" name="" id="" />
+        <div class="hamburger-lines">
+          <span class="line line1"></span>
+          <span class="line line2"></span>
+          <span class="line line3"></span>
         </div>
-        <div class="navbar__content">
-            <a href="{{ url_for('threads.threads') }}">
-                <div class="navbar__content-circle">
-                    <img class="navbar__icon" src="{{ url_for('static', filename='threads_icon_2.png') }}" alt="">
-                </div>
-            </a>
-        </div>
-
-        <div class="navbar__brand">
-                <img class="navbar__logo" src="{{ url_for('static', filename='/logo_black_bg.png') }}" alt="The Microblog logo"/>
-                <h2 class="navbar__logo-text"></h2>
-        </div>
-
-        <div class="navbar__content">
-            <a href="#">
-                <div class="navbar__content-circle">
-                    <img class="navbar__icon" src="{{ url_for('static', filename='user_icon.png') }}" alt="">
-                </div>
-            </a>
-        </div>
-        <div class="navbar__content">
-            <a href="#">
-                <div class="navbar__content-circle">
-                    <img class="navbar__icon" src="" alt="">
-                </div>
-            </a>
-        </div>
-    </nav>
-    <nav class="navbar__footer">
-        <!-- implement slider for theme here -->
-        <button class="navbar__logout">Logout</button>
-    </nav>
-</header>
+      <div class="logo">
+        <h1>NoteAI</h1>
+      </div>
+      <ul class="menu-items">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">about</a></li>
+        <li><a href="#">blogs</a></li>
+        <li><a href="#">portfolio</a></li>
+        <li><a href="#">contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
