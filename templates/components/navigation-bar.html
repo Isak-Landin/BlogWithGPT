@@ -11,10 +11,10 @@
         <h1>NoteAI</h1>
       </div>
       <ul class="menu-items">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">about</a></li>
-        <li><a href="#">blogs</a></li>
-        <li><a href="#">portfolio</a></li>
+        <li><a href="{{ url_for('home.home') }}">Notes</a></li>
+        <li><a href="{{ url_for('threads.threads') }}">Threads</a></li>
+        <li><a href="#">{{ current_user.username }}</a></li>
+        <li><a href="#">Tokens</a></li>
         <li><a href="#">contact</a></li>
       </ul>
     </div>
