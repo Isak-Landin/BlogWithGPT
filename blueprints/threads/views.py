@@ -10,6 +10,8 @@ from blueprints.threads.forms import NewThreadForm
 from models.threads import Thread
 
 
+# TODO get he threads working, these are the next steps.
+
 @threads_bp.route('/', methods=['GET',])
 @login_required
 def threads():
